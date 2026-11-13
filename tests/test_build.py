@@ -1,7 +1,7 @@
 from datetime import date
 
 from site_builder.build import render
-from site_builder.i18n import format_age, format_day
+from site_builder.i18n import format_age, format_day, format_month
 
 EVENTS = [
     {"venue": "Dynamo", "title": "Olga <b>", "date": date(2026, 11, 14), "doors": "20:00",
@@ -15,8 +15,9 @@ def test_renders_both_languages(tmp_path):
     render(EVENTS, date(2026, 11, 14), tmp_path)
     fi = (tmp_path / "fi" / "index.html").read_text(encoding="utf-8")
     en = (tmp_path / "en" / "index.html").read_text(encoding="utf-8")
-    assert "lauantai 14. marraskuuta" in fi and "K18" in fi and "Ovet 20:00" in fi
-    assert "Saturday 14 November" in en and "18+" in en and "Doors 20:00" in en
+    assert "Marraskuu 2026" in fi and "Joulukuu 2026" in fi and "K18" in fi and "Ovet 20:00" in fi
+    assert "November 2026" in en and "December 2026" in en and "18+" in en and "Doors 20:00" in en
+    assert 'data-view="calendar"' in en and "--vc: #" in en
     assert (tmp_path / "static" / "app.js").exists()
     assert (tmp_path / "upcoming.json").exists()
 
@@ -29,6 +30,7 @@ def test_titles_are_escaped(tmp_path):
 
 def test_format_helpers():
     assert format_day(date(2026, 11, 14), "fi") == "lauantai 14. marraskuuta"
+    assert format_month(date(2026, 11, 14), "fi") == "Marraskuu 2026"
     assert format_age(None, "fi") is None
 
 

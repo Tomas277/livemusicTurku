@@ -4,65 +4,89 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{{ t.title }}</title>
-  <meta name="description" content="{{ t.tagline }}">
+  <meta name="description" content="{{ t.description }}">
   <meta name="color-scheme" content="light dark">
+  <link rel="preload" href="../static/fonts/fraunces-vf-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="../static/style.css">
 </head>
 <body>
   <header class="top">
-    <div class="wrap">
-      <div class="brand">
-        <h1>{{ t.title }}</h1>
-        <p>{{ t.tagline }}</p>
-      </div>
+    <div class="wrap bar">
+      <a class="wordmark" href="./">{{ t.title }}</a>
       <a class="lang" href="../{{ t.other_lang_code }}/" hreflang="{{ t.other_lang_code }}">{{ t.other_lang }}</a>
+    </div>
+    <div class="wrap hero">
+      <h1>{{ t.hero_a }} <em>{{ t.hero_b }}</em></h1>
+      <p>{{ t.hero_text }}</p>
     </div>
   </header>
 
-  <nav class="filters" aria-label="Filters">
+  <div class="controls">
     <div class="wrap">
-      <div class="chips" role="group">
-        <button class="chip" data-range="all" aria-pressed="true">{{ t.all }}</button>
-        <button class="chip" data-range="today" aria-pressed="false">{{ t.today }}</button>
-        <button class="chip" data-range="weekend" aria-pressed="false">{{ t.weekend }}</button>
+      <div class="tabs" role="tablist" hidden>
+        <button role="tab" data-view="week" id="tab-week" aria-controls="view-week">{{ t.nav_week }}</button>
+        <button role="tab" data-view="upcoming" id="tab-upcoming" aria-controls="view-upcoming">{{ t.nav_upcoming }}</button>
+        <button role="tab" data-view="calendar" id="tab-calendar" aria-controls="view-calendar">{{ t.nav_calendar }}</button>
       </div>
-      <label class="venue-select">
-        <span class="sr">{{ t.venue }}</span>
-        <select id="venue">
-          <option value="">{{ t.all_venues }}</option>
-          {% for v in venues %}<option value="{{ v }}">{{ v }}</option>{% endfor %}
-        </select>
-      </label>
+      <div class="venues" role="group" aria-label="{{ t.venues_label }}" hidden>
+        <button class="vchip" data-venue="" aria-pressed="true">{{ t.all_venues }}</button>
+        {% for v in venues %}
+        <button class="vchip" data-venue="{{ v.name }}" aria-pressed="false" style="--vc: {{ v.color }}"><i></i>{{ v.name }}</button>
+        {% endfor %}
+      </div>
     </div>
-  </nav>
+  </div>
 
   <main class="wrap">
-    {% for day in days %}
-    <section class="day" data-date="{{ day.date }}">
-      <h2>{{ day.label }}</h2>
-      <ul class="events">
-        {% for e in day.events %}
-        <li class="event" data-venue="{{ e.venue }}">
-          <a href="{{ e.url }}" rel="noopener">
-            <div class="main">
-              <h3>{{ e.title }}</h3>
-              <p class="venue">{{ e.venue }}</p>
-            </div>
-            <div class="meta">
-              {% if e.doors %}<span>{{ t.doors }} {{ e.doors }}</span>{% endif %}
-              {% if e.start %}<span>{{ t.start }} {{ e.start }}</span>{% endif %}
-              {% if e.age %}<span class="age">{{ e.age }}</span>{% endif %}
-            </div>
-          </a>
-        </li>
-        {% endfor %}
-      </ul>
+    <section id="view-week" class="view" role="tabpanel" aria-labelledby="tab-week" hidden>
+      <p class="intro">{{ t.week_intro }}</p>
+      <div class="week-list"></div>
     </section>
-    {% endfor %}
-    <p id="empty" class="empty" hidden>{{ t.empty }}</p>
+
+    <section id="view-upcoming" class="view" role="tabpanel" aria-labelledby="tab-upcoming">
+      <p class="intro">{{ t.upcoming_intro }}</p>
+      <div class="month-pills" hidden></div>
+      {% for m in months %}
+      <section class="month" data-month="{{ m.key }}">
+        <h2>{{ m.label }}</h2>
+        <div class="grid">
+          {% for e in m.events %}
+          <a class="ev" href="{{ e.url }}" rel="noopener" data-date="{{ e.date.isoformat() }}" data-venue="{{ e.venue }}" style="--vc: {{ e.color }}">
+            <time class="ev-date" datetime="{{ e.date.isoformat() }}">
+              <span class="dow">{{ e.dow }}</span><span class="day">{{ e.date.day }}</span><span class="mon">{{ e.mon }}</span>
+            </time>
+            <div class="ev-body">
+              <h3>{{ e.title }}</h3>
+              <p class="sub"><span class="venue"><i></i>{{ e.venue }}</span>
+                {%- if e.doors %}<span>{{ t.doors }} {{ e.doors }}</span>{% endif -%}
+                {%- if e.start %}<span>{{ t.start }} {{ e.start }}</span>{% endif -%}
+                {%- if e.age %}<span class="age">{{ e.age }}</span>{% endif -%}
+              </p>
+            </div>
+            <span class="go" aria-hidden="true">&rarr;</span>
+          </a>
+          {% endfor %}
+        </div>
+      </section>
+      {% endfor %}
+    </section>
+
+    <section id="view-calendar" class="view" role="tabpanel" aria-labelledby="tab-calendar" hidden>
+      <p class="intro">{{ t.calendar_intro }}</p>
+      <div class="cal"></div>
+      <div class="cal-day"></div>
+    </section>
+
+    <p id="empty" class="empty" hidden></p>
   </main>
 
-  <footer class="wrap foot">{{ t.updated }} {{ built_on }}</footer>
+  <footer class="foot">
+    <div class="wrap">
+      <p>{{ t.sources }} {{ venues | map(attribute="name") | join(", ") }}.</p>
+      <p>{{ t.updated }} {{ built_on }}</p>
+    </div>
+  </footer>
+  <script type="application/json" id="i18n">{{ js_strings | tojson }}</script>
   <script src="../static/app.js" defer></script>
 </body>
 </html>

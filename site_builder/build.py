@@ -7,11 +7,15 @@ from pathlib import Path
 import duckdb
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
-from site_builder.i18n import STRINGS, format_age, format_day
+from site_builder.i18n import (MONTHS_NOMINATIVE, MONTHS_SHORT, STRINGS, WEEKDAYS, WEEKDAYS_SHORT,
+                               format_age, format_day, format_month)
 
 ROOT = Path(__file__).resolve().parent.parent
 WAREHOUSE = ROOT / "data" / "warehouse.duckdb"
 SITE = ROOT / "site"
+# One colour per venue, so a glance at the dots tells you where a gig is.
+VENUE_COLORS = ["#e4452b", "#2f7de1", "#1f9d6c", "#c98a0b", "#8e55d6",
+                "#d4478f", "#0e9aa7", "#7a8b1f", "#b25b2a"]
 
 
 def read_events(con) -> list[dict]:
@@ -31,14 +35,23 @@ def render(events: list[dict], built_on: date, out: Path = SITE) -> None:
     shutil.copytree(ROOT / "static", out / "static")
 
     venues = sorted({e["venue"] for e in events})
+    colors = {v: VENUE_COLORS[i % len(VENUE_COLORS)] for i, v in enumerate(venues)}
     for lang, t in STRINGS.items():
-        days = [
-            {"date": d.isoformat(), "label": format_day(d, lang),
-             "events": [dict(e, age=format_age(e["age_limit"], lang)) for e in evs]}
-            for d, evs in groupby(events, key=lambda e: e["date"])
+        months = [
+            {"key": f"{k[0]}-{k[1]:02d}", "label": format_month(evs[0]["date"], lang),
+             "events": [dict(e, age=format_age(e["age_limit"], lang), color=colors[e["venue"]],
+                             dow=WEEKDAYS_SHORT[lang][e["date"].weekday()],
+                             mon=MONTHS_SHORT[lang][e["date"].month - 1],
+                             label=format_day(e["date"], lang)) for e in evs]}
+            for k, evs in ((k, list(g)) for k, g in groupby(events, key=lambda e: (e["date"].year, e["date"].month)))
         ]
+        js_strings = {
+            "weekdays": WEEKDAYS_SHORT[lang], "weekdays_long": WEEKDAYS[lang], "months": MONTHS_NOMINATIVE[lang],
+            **{k: t[k] for k in ("today", "tomorrow", "empty", "empty_week", "empty_day", "gigs", "prev", "next")},
+        }
         page = env.get_template("index.html").render(
-            t=t, lang=lang, days=days, venues=venues, built_on=built_on.isoformat())
+            t=t, lang=lang, months=months, venues=[{"name": v, "color": colors[v]} for v in venues],
+            built_on=built_on.isoformat(), js_strings=js_strings)
         (out / lang).mkdir(parents=True, exist_ok=True)
         (out / lang / "index.html").write_text(page, encoding="utf-8")
 
