@@ -22,6 +22,8 @@ def read_events(con) -> list[dict]:
 
 
 def render(events: list[dict], built_on: date, out: Path = SITE) -> None:
+    if not events:
+        raise ValueError("No upcoming events: refusing to build an empty site")
     env = Environment(loader=FileSystemLoader(ROOT / "templates"),
                       autoescape=select_autoescape())
     if out.exists():

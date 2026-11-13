@@ -19,6 +19,8 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    outputs:
+      pipeline_failed: ${{ steps.pipeline.outcome == 'failure' }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -28,6 +30,9 @@ jobs:
       - run: pip install -r requirements.txt
       - run: python -m pytest -q
       - name: Extract, load and transform
+        id: pipeline
+        # A broken scraper must not stop the site updating; the "alert" job fails the run afterwards.
+        continue-on-error: true
         run: python -m pipeline.run
       - name: Build site
         run: python -m site_builder.build
@@ -51,3 +56,14 @@ jobs:
     steps:
       - id: deployment
         uses: actions/deploy-pages@v4
+
+  alert:
+    # Runs after a successful deploy, but fails the workflow run if any source failed,
+    # so GitHub sends the failure email.
+    needs: [build, deploy]
+    if: needs.build.outputs.pipeline_failed == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          echo "::error::At least one venue source failed. The site was still deployed without it. See the 'Extract, load and transform' step in the build job."
+          exit 1

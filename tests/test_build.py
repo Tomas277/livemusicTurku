@@ -30,3 +30,9 @@ def test_titles_are_escaped(tmp_path):
 def test_format_helpers():
     assert format_day(date(2026, 11, 14), "fi") == "lauantai 14. marraskuuta"
     assert format_age(None, "fi") is None
+
+
+def test_refuses_to_build_an_empty_site(tmp_path):
+    import pytest
+    with pytest.raises(ValueError):
+        render([], date(2026, 11, 14), tmp_path)
