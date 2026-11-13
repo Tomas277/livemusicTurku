@@ -3,21 +3,12 @@ from datetime import date
 
 from bs4 import BeautifulSoup
 
-from pipeline.dates import infer_date
+from pipeline.dates import find_time, infer_date
 
 SOURCE = "dynamo"
 VENUE = "Dynamo"
 BASE_URL = "https://www.dynamoklubi.com/"
 PROGRAM_URL = BASE_URL + "ohjelma"
-
-_TIME = r"(\d{1,2})(?:[:.](\d{2}))?"
-
-
-def _find_time(pattern: str, text: str) -> str | None:
-    m = re.search(pattern + r"\s*klo\s*" + _TIME, text, re.IGNORECASE)
-    if not m:
-        return None
-    return f"{int(m.group(1)):02d}:{m.group(2) or '00'}"
 
 
 def parse(html: str, today: date) -> list[dict]:
@@ -42,8 +33,8 @@ def parse(html: str, today: date) -> list[dict]:
             "title": title_tag.get_text(" ", strip=True),
             "date": infer_date(int(m.group(1)), int(m.group(2)), today,
                                day_name.get_text(strip=True)).isoformat(),
-            "doors": _find_time("ovet", text),
-            "start": _find_time("live", text),
+            "doors": find_time(r"ovet\s*klo", text),
+            "start": find_time(r"live\s*klo", text),
             "age_limit": int(age.group(1)) if age else None,
             "url": BASE_URL + link.group(1) if link else PROGRAM_URL,
         })

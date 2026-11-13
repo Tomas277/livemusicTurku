@@ -1,3 +1,4 @@
+import re
 from datetime import date
 
 FI_WEEKDAYS = {
@@ -5,6 +6,16 @@ FI_WEEKDAYS = {
     "perjantai": 4, "lauantai": 5, "sunnuntai": 6,
     "ma": 0, "ti": 1, "ke": 2, "to": 3, "pe": 4, "la": 5, "su": 6,
 }
+
+_TIME = r"(\d{1,2})(?:[:.](\d{2}))?"
+
+
+def find_time(prefix: str, text: str) -> str | None:
+    """Find a clock time after a keyword pattern, e.g. find_time('ovet\\s*klo', ...) -> '20:30'."""
+    m = re.search(prefix + r"\s*" + _TIME, text, re.IGNORECASE)
+    if not m:
+        return None
+    return f"{int(m.group(1)):02d}:{m.group(2) or '00'}"
 
 
 def infer_date(day: int, month: int, today: date, weekday: str | None = None) -> date:
