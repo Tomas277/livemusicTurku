@@ -1,0 +1,338 @@
+{
+ "filters": {},
+ "post_counter": 126,
+ "ppp": 9,
+ "page_count": 14,
+ "contentList": [
+  {
+   "component": "Events",
+   "data": {
+    "title": "TFO: Avajaiskonsertti",
+    "imgHtml": "",
+    "date": "14.11.2026",
+    "categories": "Konserttisali, Musiikkitalo Fuuga, TFO: Avajaiskonsertti, Sinfoniakonsertti, Sinfoniaorkesteri",
+    "url": "https://www.musiikkitalofuuga.fi/events/tfo-avajaiskonsertti-3/",
+    "eventDateDay": "Lauantai",
+    "eventDateDayNum": "14",
+    "eventDateMonth": "marraskuuta",
+    "eventTime": "14:00",
+    "buyLink": "https://liput.musiikkitalofuuga.fi/fi/tfo/buyingflow/tickets/15577/21386/",
+    "eventVenue": [
+     "Konserttisali"
+    ],
+    "eventSerial": [
+     "TFO: Avajaiskonsertti"
+    ],
+    "eventGen": [
+     "Sinfoniakonsertti",
+     "Sinfoniaorkesteri"
+    ],
+    "eventTitle": "TFO: Avajaiskonsertti",
+    "serieImage": "<img width=\"1920\" height=\"1080\" src=\"https://www.musiikkitalofuuga.fi/wp-content/uploads/sites/7/2026/02/avajaiskonsertti_1920x1080px.webp\" class=\"serie-image\" alt=\"\" decoding=\"async\" loading=\"lazy\" srcset=\"https://www.musiikkitalofuuga.fi/wp-content/uploads/sites/7/2026/02/avajaiskonsertti_1920x1080px.webp 1920w, https://www.musiikkitalofuuga.fi/wp-content/uploads/sites/7/2026/02/avajaiskonsertti_1920x1080px-300x169.webp 300w, https://www.musiikkitalofuuga.fi/wp-content/uploads/sites/7/2026/02/avajaiskonsertti_1920x1080px-1024x576.webp 1024w, https://www.musiikkitalofuuga.fi/wp-content/uploads/sites/7/2026/02/avajaiskonsertti_1920x1080px-768x432.webp 768w, https://www.musiikkitalofuuga.fi/wp-content/uploads/sites/7/2026/02/avajaiskonsertti_1920x1080px-1536x864.webp 1536w\" sizes=\"auto, (max-width: 1920px) 100vw, 1920px\" />",
+    "serieLink": "https://www.musiikkitalofuuga.fi/tapahtumat/tfo-avajaiskonsertti/",
+    "eventMinPrice": "Alkaen 19,50 €",
+    "capacityStatus": "red",
+    "capacityText": "Loppuunmyyty",
+    "showBuyLink": false,
+    "dimPrice": true,
+    "buyTicketsText": "Osta lippuja",
+    "readMoreText": "Lue lisää",
+    "readMoreAriaLabel": "TFO: Avajaiskonsertti, Lue lisää",
+    "buyTicketsAriaLabel": "TFO: Avajaiskonsertti, Osta lippuja, Avautuu uuteen välilehteen"
+   }
+  },
+  {
+   "component": "Events",
+   "data": {
+    "title": "Muumit Pyrstötähteä etsimässä",
+    "imgHtml": "",
+    "date": "14.11.2026",
+    "categories": "Konserttisali, Musiikkitalo Fuuga, Muumit Pyrstötähteä etsimässä, Lastenmusiikki",
+    "url": "https://www.musiikkitalofuuga.fi/events/muumit-pyrstotahtea-etsimassa/",
+    "eventDateDay": "Sunnuntai",
+    "eventDateDayNum": "15",
+    "eventDateMonth": "marraskuuta",
+    "eventTime": "14:00",
+    "buyLink": "https://liput.musiikkitalofuuga.fi/fi/buyingflow/tickets/15818/22249/",
+    "eventVenue": [
+     "Konserttisali"
+    ],
+    "eventSerial": [
+     "Muumit Pyrstötähteä etsimässä"
+    ],
+    "eventGen": [
+     "Lastenmusiikki"
+    ],
+    "eventTitle": "Muumit Pyrstötähteä etsimässä",
+    "serieImage": "<img width=\"1920\" height=\"1080\" src=\"https://www.musiikkitalofuuga.fi/wp-content/uploads/sites/7/2026/05/Muumit-Fuuga-1920x1080-1.webp\" class=\"serie-image\" alt=\"\" decoding=\"async\" loading=\"lazy\" srcset=\"https://www.musiikkitalofuuga.fi/wp-content/uploads/sites/7/2026/05/Muumit-Fuuga-1920x1080-1.webp 1920w, https://www.musiikkitalofuuga.fi/wp-content/uploads/sites/7/2026/05/Muumit-Fuuga-1920x1080-1-300x169.webp 300w, https://www.musiikkitalofuuga.fi/wp-content/uploads/sites/7/2026/05/Muumit-Fuuga-1920x1080-1-1024x576.webp 1024w, https://www.musiikkitalofuuga.fi/wp-content/uploads/sites/7/2026/05/Muumit-Fuuga-1920x1080-1-768x432.webp 768w, https://www.musiikkitalofuuga.fi/wp-content/uploads/sites/7/2026/05/Muumit-Fuuga-1920x1080-1-1536x864.webp 1536w\" sizes=\"auto, (max-width: 1920px) 100vw, 1920px\" />",
+    "serieLink": "https://www.musiikkitalofuuga.fi/tapahtumat/muumit/",
+    "eventMinPrice": "Alkaen 31,50 €",
+    "capacityStatus": "yellow",
+    "capacityText": "Lippuja rajoitetusti",
+    "showBuyLink": true,
+    "dimPrice": false,
+    "buyTicketsText": "Osta lippuja",
+    "readMoreText": "Lue lisää",
+    "readMoreAriaLabel": "Muumit Pyrstötähteä etsimässä, Lue lisää",
+    "buyTicketsAriaLabel": "Muumit Pyrstötähteä etsimässä, Osta lippuja, Avautuu uuteen välilehteen"
+   }
+  },
+  {
+   "component": "Events",
+   "data": {
+    "title": "TMJ: Red Nose Company &#038; Meta4: Voces &#8211; Sisäisiä ääniä",
+    "imgHtml": "",
+    "date": "14.11.2026",
+    "categories": "Ateljee, Musiikkitalo Fuuga, Red Nose Company &#038; Meta4: Voces &#8211; Sisäisiä ääniä, Kamarimusiikki, Klassinen",
+    "url": "https://www.musiikkitalofuuga.fi/events/tmj-red-nose-company-meta4-voces-sisaisia-aania/",
+    "eventDateDay": "Tiistai",
+    "eventDateDayNum": "17",
+    "eventDateMonth": "marraskuuta",
+    "eventTime": "18:00",
+    "buyLink": "https://liput.musiikkitalofuuga.fi/fi/buyingflow/tickets/15780/22187/",
+    "eventVenue": [
+     "Ateljee"
+    ],
+    "eventSerial": [
+     "Red Nose Company &#038; Meta4: Voces &#8211; Sisäisiä ääniä"
+    ],
+    "eventGen": [
+     "Kamarimusiikki",
+     "Klassinen"
+    ],
+    "eventTitle": "TMJ: Red Nose Company &#038; Meta4: Voces &#8211; Sisäisiä ääniä",
+    "serieImage": "<img width=\"1920\" height=\"1080\" src=\"https://www.musiikkitalofuuga.fi/wp-content/uploads/sites/7/2026/04/Red-Nose-Company_1920x1080_juurilla.webp\" class=\"serie-image\" alt=\"\" decoding=\"async\" loading=\"lazy\" srcset=\"https://www.musiikkitalofuuga.fi/wp-content/uploads/sites/7/2026/04/Red-Nose-Company_1920x1080_juurilla.webp 1920w, https://www.musiikkitalofuuga.fi/wp-content/uploads/sites/7/2026/04/Red-Nose-Company_1920x1080_juurilla-300x169.webp 300w, https://www.musiikkitalofuuga.fi/wp-content/uploads/sites/7/2026/04/Red-Nose-Company_1920x1080_juurilla-1024x576.webp 1024w, https://www.musiikkitalofuuga.fi/wp-content/uploads/sites/7/2026/04/Red-Nose-Company_1920x1080_juurilla-768x432.webp 768w, https://www.musiikkitalofuuga.fi/wp-content/uploads/sites/7/2026/04/Red-Nose-Company_1920x1080_juurilla-1536x864.webp 1536w\" sizes=\"auto, (max-width: 1920px) 100vw, 1920px\" />",
+    "serieLink": "https://www.musiikkitalofuuga.fi/tapahtumat/tmj-red-nose-company-meta4-voces-sisaisia-aania/",
+    "eventMinPrice": "Alkaen 25,00 €",
+    "capacityStatus": "red",
+    "capacityText": "Loppuunmyyty",
+    "showBuyLink": false,
+    "dimPrice": true,
+    "buyTicketsText": "Osta lippuja",
+    "readMoreText": "Lue lisää",
+    "readMoreAriaLabel": "TMJ: Red Nose Company &#038; Meta4: Voces &#8211; Sisäisiä ääniä, Lue lisää",
+    "buyTicketsAriaLabel": "TMJ: Red Nose Company &#038; Meta4: Voces &#8211; Sisäisiä ääniä, Osta lippuja, Avautuu uuteen välilehteen"
+   }
+  },
+  {
+   "component": "Events",
+   "data": {
+    "title": "Mun sydämeni tänne jäi",
+    "imgHtml": "",
+    "date": "14.11.2026",
+    "categories": "Konserttisali, Musiikkitalo Fuuga, Mun sydämeni tänne jäi, Viihdekonsertti",
+    "url": "https://www.musiikkitalofuuga.fi/events/mun-sydameni-tanne-jai/",
+    "eventDateDay": "Keskiviikko",
+    "eventDateDayNum": "18",
+    "eventDateMonth": "marraskuuta",
+    "eventTime": "15:00",
+    "buyLink": "https://liput.musiikkitalofuuga.fi/fi/buyingflow/tickets/15592/22773/",
+    "eventVenue": [
+     "Konserttisali"
+    ],
+    "eventSerial": [
+     "Mun sydämeni tänne jäi"
+    ],
+    "eventGen": [
+     "Viihdekonsertti"
+    ],
+    "eventTitle": "Mun sydämeni tänne jäi",
+    "serieImage": "<img width=\"1920\" height=\"1080\" src=\"https://www.musiikkitalofuuga.fi/wp-content/uploads/sites/7/2026/02/Vaaka_Mun_sydameni_tanne_jai_1920x1080.webp\" class=\"serie-image\" alt=\"\" decoding=\"async\" loading=\"lazy\" srcset=\"https://www.musiikkitalofuuga.fi/wp-content/uploads/sites/7/2026/02/Vaaka_Mun_sydameni_tanne_jai_1920x1080.webp 1920w, https://www.musiikkitalofuuga.fi/wp-content/uploads/sites/7/2026/02/Vaaka_Mun_sydameni_tanne_jai_1920x1080-300x169.webp 300w, https://www.musiikkitalofuuga.fi/wp-content/uploads/sites/7/2026/02/Vaaka_Mun_sydameni_tanne_jai_1920x1080-1024x576.webp 1024w, https://www.musiikkitalofuuga.fi/wp-content/uploads/sites/7/2026/02/Vaaka_Mun_sydameni_tanne_jai_1920x1080-768x432.webp 768w, https://www.musiikkitalofuuga.fi/wp-content/uploads/sites/7/2026/02/Vaaka_Mun_sydameni_tanne_jai_1920x1080-1536x864.webp 1536w\" sizes=\"auto, (max-width: 1920px) 100vw, 1920px\" />",
+    "serieLink": "https://www.musiikkitalofuuga.fi/tapahtumat/mun-sydameni-tanne-jai/",
+    "eventMinPrice": "Alkaen 54,50 €",
+    "capacityStatus": "yellow",
+    "capacityText": "Lippuja rajoitetusti",
+    "showBuyLink": true,
+    "dimPrice": false,
+    "buyTicketsText": "Osta lippuja",
+    "readMoreText": "Lue lisää",
+    "readMoreAriaLabel": "Mun sydämeni tänne jäi, Lue lisää",
+    "buyTicketsAriaLabel": "Mun sydämeni tänne jäi, Osta lippuja, Avautuu uuteen välilehteen"
+   }
+  },
+  {
+   "component": "Events",
+   "data": {
+    "title": "Mun sydämeni tänne jäi",
+    "imgHtml": "",
+    "date": "14.11.2026",
+    "categories": "Konserttisali, Musiikkitalo Fuuga, Mun sydämeni tänne jäi, Viihdekonsertti",
+    "url": "https://www.musiikkitalofuuga.fi/events/mun-sydameni-tanne-jai-2/",
+    "eventDateDay": "Keskiviikko",
+    "eventDateDayNum": "18",
+    "eventDateMonth": "marraskuuta",
+    "eventTime": "19:00",
+    "buyLink": "https://liput.musiikkitalofuuga.fi/fi/buyingflow/tickets/15592/21416/",
+    "eventVenue": [
+     "Konserttisali"
+    ],
+    "eventSerial": [
+     "Mun sydämeni tänne jäi"
+    ],
+    "eventGen": [
+     "Viihdekonsertti"
+    ],
+    "eventTitle": "Mun sydämeni tänne jäi",
+    "serieImage": "<img width=\"1920\" height=\"1080\" src=\"https://www.musiikkitalofuuga.fi/wp-content/uploads/sites/7/2026/02/Vaaka_Mun_sydameni_tanne_jai_1920x1080.webp\" class=\"serie-image\" alt=\"\" decoding=\"async\" loading=\"lazy\" srcset=\"https://www.musiikkitalofuuga.fi/wp-content/uploads/sites/7/2026/02/Vaaka_Mun_sydameni_tanne_jai_1920x1080.webp 1920w, https://www.musiikkitalofuuga.fi/wp-content/uploads/sites/7/2026/02/Vaaka_Mun_sydameni_tanne_jai_1920x1080-300x169.webp 300w, https://www.musiikkitalofuuga.fi/wp-content/uploads/sites/7/2026/02/Vaaka_Mun_sydameni_tanne_jai_1920x1080-1024x576.webp 1024w, https://www.musiikkitalofuuga.fi/wp-content/uploads/sites/7/2026/02/Vaaka_Mun_sydameni_tanne_jai_1920x1080-768x432.webp 768w, https://www.musiikkitalofuuga.fi/wp-content/uploads/sites/7/2026/02/Vaaka_Mun_sydameni_tanne_jai_1920x1080-1536x864.webp 1536w\" sizes=\"auto, (max-width: 1920px) 100vw, 1920px\" />",
+    "serieLink": "https://www.musiikkitalofuuga.fi/tapahtumat/mun-sydameni-tanne-jai/",
+    "eventMinPrice": "Alkaen 54,50 €",
+    "capacityStatus": "yellow",
+    "capacityText": "Lippuja rajoitetusti",
+    "showBuyLink": true,
+    "dimPrice": false,
+    "buyTicketsText": "Osta lippuja",
+    "readMoreText": "Lue lisää",
+    "readMoreAriaLabel": "Mun sydämeni tänne jäi, Lue lisää",
+    "buyTicketsAriaLabel": "Mun sydämeni tänne jäi, Osta lippuja, Avautuu uuteen välilehteen"
+   }
+  },
+  {
+   "component": "Events",
+   "data": {
+    "title": "TFO: Syleilevä sointi",
+    "imgHtml": "",
+    "date": "14.11.2026",
+    "categories": "Konserttisali, Musiikkitalo Fuuga, TFO: Syleilevä sointi, Sinfoniakonsertti, Sinfoniaorkesteri",
+    "url": "https://www.musiikkitalofuuga.fi/events/tfo-syleileva-sointi/",
+    "eventDateDay": "Torstai",
+    "eventDateDayNum": "19",
+    "eventDateMonth": "marraskuuta",
+    "eventTime": "18:30",
+    "buyLink": "https://liput.musiikkitalofuuga.fi/fi/tfo/buyingflow/tickets/15578/21382/",
+    "eventVenue": [
+     "Konserttisali"
+    ],
+    "eventSerial": [
+     "TFO: Syleilevä sointi"
+    ],
+    "eventGen": [
+     "Sinfoniakonsertti",
+     "Sinfoniaorkesteri"
+    ],
+    "eventTitle": "TFO: Syleilevä sointi",
+    "serieImage": "<img width=\"1920\" height=\"1080\" src=\"https://www.musiikkitalofuuga.fi/wp-content/uploads/sites/7/2026/02/Minami-Yoshida-by-Yoshihiro-Yoshida_1920x1080.webp\" class=\"serie-image\" alt=\"\" decoding=\"async\" loading=\"lazy\" srcset=\"https://www.musiikkitalofuuga.fi/wp-content/uploads/sites/7/2026/02/Minami-Yoshida-by-Yoshihiro-Yoshida_1920x1080.webp 1920w, https://www.musiikkitalofuuga.fi/wp-content/uploads/sites/7/2026/02/Minami-Yoshida-by-Yoshihiro-Yoshida_1920x1080-300x169.webp 300w, https://www.musiikkitalofuuga.fi/wp-content/uploads/sites/7/2026/02/Minami-Yoshida-by-Yoshihiro-Yoshida_1920x1080-1024x576.webp 1024w, https://www.musiikkitalofuuga.fi/wp-content/uploads/sites/7/2026/02/Minami-Yoshida-by-Yoshihiro-Yoshida_1920x1080-768x432.webp 768w, https://www.musiikkitalofuuga.fi/wp-content/uploads/sites/7/2026/02/Minami-Yoshida-by-Yoshihiro-Yoshida_1920x1080-1536x864.webp 1536w\" sizes=\"auto, (max-width: 1920px) 100vw, 1920px\" />",
+    "serieLink": "https://www.musiikkitalofuuga.fi/tapahtumat/tfo-syleileva-sointi/",
+    "eventMinPrice": "Alkaen 9,50 €",
+    "capacityStatus": "yellow",
+    "capacityText": "Lippuja rajoitetusti",
+    "showBuyLink": true,
+    "dimPrice": false,
+    "buyTicketsText": "Osta lippuja",
+    "readMoreText": "Lue lisää",
+    "readMoreAriaLabel": "TFO: Syleilevä sointi, Lue lisää",
+    "buyTicketsAriaLabel": "TFO: Syleilevä sointi, Osta lippuja, Avautuu uuteen välilehteen"
+   }
+  },
+  {
+   "component": "Events",
+   "data": {
+    "title": "Viktoria Tolstoy &#038; Jacob Karlzon &#8211; Who We Are",
+    "imgHtml": "",
+    "date": "14.11.2026",
+    "categories": "Ateljee, Musiikkitalo Fuuga, Viktoria Tolstoy &#038; Jacob Karlzon &#8211; Who We Are, Jazz",
+    "url": "https://www.musiikkitalofuuga.fi/events/viktoria-tolstoy-jacob-karlzon-who-we-are/",
+    "eventDateDay": "Torstai",
+    "eventDateDayNum": "19",
+    "eventDateMonth": "marraskuuta",
+    "eventTime": "19:00",
+    "buyLink": "https://liput.musiikkitalofuuga.fi/fi/buyingflow/tickets/15795/22210/",
+    "eventVenue": [
+     "Ateljee"
+    ],
+    "eventSerial": [
+     "Viktoria Tolstoy &#038; Jacob Karlzon &#8211; Who We Are"
+    ],
+    "eventGen": [
+     "Jazz"
+    ],
+    "eventTitle": "Viktoria Tolstoy &#038; Jacob Karlzon &#8211; Who We Are",
+    "serieImage": "<img width=\"1920\" height=\"1080\" src=\"https://www.musiikkitalofuuga.fi/wp-content/uploads/sites/7/2026/04/Viktoria-Tolstoy-Jacob-Karlzon_Fuugan-paakuvat-1920-x-1080-px.webp\" class=\"serie-image\" alt=\"\" decoding=\"async\" loading=\"lazy\" srcset=\"https://www.musiikkitalofuuga.fi/wp-content/uploads/sites/7/2026/04/Viktoria-Tolstoy-Jacob-Karlzon_Fuugan-paakuvat-1920-x-1080-px.webp 1920w, https://www.musiikkitalofuuga.fi/wp-content/uploads/sites/7/2026/04/Viktoria-Tolstoy-Jacob-Karlzon_Fuugan-paakuvat-1920-x-1080-px-300x169.webp 300w, https://www.musiikkitalofuuga.fi/wp-content/uploads/sites/7/2026/04/Viktoria-Tolstoy-Jacob-Karlzon_Fuugan-paakuvat-1920-x-1080-px-1024x576.webp 1024w, https://www.musiikkitalofuuga.fi/wp-content/uploads/sites/7/2026/04/Viktoria-Tolstoy-Jacob-Karlzon_Fuugan-paakuvat-1920-x-1080-px-768x432.webp 768w, https://www.musiikkitalofuuga.fi/wp-content/uploads/sites/7/2026/04/Viktoria-Tolstoy-Jacob-Karlzon_Fuugan-paakuvat-1920-x-1080-px-1536x864.webp 1536w\" sizes=\"auto, (max-width: 1920px) 100vw, 1920px\" />",
+    "serieLink": "https://www.musiikkitalofuuga.fi/tapahtumat/who-we-are/",
+    "eventMinPrice": "Alkaen 20,00 €",
+    "capacityStatus": "green",
+    "capacityText": "Lippuja saatavilla",
+    "showBuyLink": true,
+    "dimPrice": false,
+    "buyTicketsText": "Osta lippuja",
+    "readMoreText": "Lue lisää",
+    "readMoreAriaLabel": "Viktoria Tolstoy &#038; Jacob Karlzon &#8211; Who We Are, Lue lisää",
+    "buyTicketsAriaLabel": "Viktoria Tolstoy &#038; Jacob Karlzon &#8211; Who We Are, Osta lippuja, Avautuu uuteen välilehteen"
+   }
+  },
+  {
+   "component": "Events",
+   "data": {
+    "title": "TFO: Syleilevä sointi",
+    "imgHtml": "",
+    "date": "14.11.2026",
+    "categories": "Konserttisali, Musiikkitalo Fuuga, TFO: Syleilevä sointi, Sinfoniakonsertti, Sinfoniaorkesteri",
+    "url": "https://www.musiikkitalofuuga.fi/events/tfo-syleileva-sointi-2/",
+    "eventDateDay": "Perjantai",
+    "eventDateDayNum": "20",
+    "eventDateMonth": "marraskuuta",
+    "eventTime": "18:00",
+    "buyLink": "https://liput.musiikkitalofuuga.fi/fi/tfo/buyingflow/tickets/15578/21387/",
+    "eventVenue": [
+     "Konserttisali"
+    ],
+    "eventSerial": [
+     "TFO: Syleilevä sointi"
+    ],
+    "eventGen": [
+     "Sinfoniakonsertti",
+     "Sinfoniaorkesteri"
+    ],
+    "eventTitle": "TFO: Syleilevä sointi",
+    "serieImage": "<img width=\"1920\" height=\"1080\" src=\"https://www.musiikkitalofuuga.fi/wp-content/uploads/sites/7/2026/02/Minami-Yoshida-by-Yoshihiro-Yoshida_1920x1080.webp\" class=\"serie-image\" alt=\"\" decoding=\"async\" loading=\"lazy\" srcset=\"https://www.musiikkitalofuuga.fi/wp-content/uploads/sites/7/2026/02/Minami-Yoshida-by-Yoshihiro-Yoshida_1920x1080.webp 1920w, https://www.musiikkitalofuuga.fi/wp-content/uploads/sites/7/2026/02/Minami-Yoshida-by-Yoshihiro-Yoshida_1920x1080-300x169.webp 300w, https://www.musiikkitalofuuga.fi/wp-content/uploads/sites/7/2026/02/Minami-Yoshida-by-Yoshihiro-Yoshida_1920x1080-1024x576.webp 1024w, https://www.musiikkitalofuuga.fi/wp-content/uploads/sites/7/2026/02/Minami-Yoshida-by-Yoshihiro-Yoshida_1920x1080-768x432.webp 768w, https://www.musiikkitalofuuga.fi/wp-content/uploads/sites/7/2026/02/Minami-Yoshida-by-Yoshihiro-Yoshida_1920x1080-1536x864.webp 1536w\" sizes=\"auto, (max-width: 1920px) 100vw, 1920px\" />",
+    "serieLink": "https://www.musiikkitalofuuga.fi/tapahtumat/tfo-syleileva-sointi/",
+    "eventMinPrice": "Alkaen 9,50 €",
+    "capacityStatus": "yellow",
+    "capacityText": "Lippuja rajoitetusti",
+    "showBuyLink": true,
+    "dimPrice": false,
+    "buyTicketsText": "Osta lippuja",
+    "readMoreText": "Lue lisää",
+    "readMoreAriaLabel": "TFO: Syleilevä sointi, Lue lisää",
+    "buyTicketsAriaLabel": "TFO: Syleilevä sointi, Osta lippuja, Avautuu uuteen välilehteen"
+   }
+  },
+  {
+   "component": "Events",
+   "data": {
+    "title": "Pesso / F",
+    "imgHtml": "",
+    "date": "14.11.2026",
+    "categories": "Ateljee, Musiikkitalo Fuuga, Pesso, F, Hip hop, Pop, R&amp;B",
+    "url": "https://www.musiikkitalofuuga.fi/events/pesso-f/",
+    "eventDateDay": "Perjantai",
+    "eventDateDayNum": "20",
+    "eventDateMonth": "marraskuuta",
+    "eventTime": "20:00",
+    "buyLink": "https://liput.kulttuuriranta.fi/fi/buyingflow/tickets/15591/21413/",
+    "eventVenue": [
+     "Ateljee"
+    ],
+    "eventSerial": [
+     "Pesso, F"
+    ],
+    "eventGen": [
+     "Hip hop",
+     "Pop",
+     "R&amp;B"
+    ],
+    "eventTitle": "Pesso / F",
+    "serieImage": "<img width=\"1920\" height=\"1080\" src=\"https://www.musiikkitalofuuga.fi/wp-content/uploads/sites/7/2026/02/Pesso-F_split_NEW.webp\" class=\"serie-image\" alt=\"\" decoding=\"async\" loading=\"lazy\" srcset=\"https://www.musiikkitalofuuga.fi/wp-content/uploads/sites/7/2026/02/Pesso-F_split_NEW.webp 1920w, https://www.musiikkitalofuuga.fi/wp-content/uploads/sites/7/2026/02/Pesso-F_split_NEW-300x169.webp 300w, https://www.musiikkitalofuuga.fi/wp-content/uploads/sites/7/2026/02/Pesso-F_split_NEW-1024x576.webp 1024w, https://www.musiikkitalofuuga.fi/wp-content/uploads/sites/7/2026/02/Pesso-F_split_NEW-768x432.webp 768w, https://www.musiikkitalofuuga.fi/wp-content/uploads/sites/7/2026/02/Pesso-F_split_NEW-1536x864.webp 1536w\" sizes=\"auto, (max-width: 1920px) 100vw, 1920px\" />",
+    "serieLink": "https://www.musiikkitalofuuga.fi/tapahtumat/pesso-f-2/",
+    "eventMinPrice": "Alkaen 26,50 €",
+    "capacityStatus": "red",
+    "capacityText": "Loppuunmyyty",
+    "showBuyLink": false,
+    "dimPrice": true,
+    "buyTicketsText": "Osta lippuja",
+    "readMoreText": "Lue lisää",
+    "readMoreAriaLabel": "Pesso / F, Lue lisää",
+    "buyTicketsAriaLabel": "Pesso / F, Osta lippuja, Avautuu uuteen välilehteen"
+   }
+  }
+ ]
+}

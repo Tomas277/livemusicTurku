@@ -1,0 +1,149 @@
+{
+ "contentList": [
+  {
+   "component": "Events",
+   "data": {
+    "title": "Sami &#038; Jorma: Keikarit &#8211; ensimmäinen jäähyväiskiertue",
+    "imgHtml": "",
+    "date": "14.11.2026",
+    "categories": "Konserttisali, Musiikkitalo Fuuga, Keikarit &#8211; ensimmäinen jäähyväiskiertue, Talkshow",
+    "url": "https://www.musiikkitalofuuga.fi/events/keikarit-ensimmainen-jaahyvaiskiertue/",
+    "eventDateDay": "Keskiviikko",
+    "eventDateDayNum": "9",
+    "eventDateMonth": "joulukuuta",
+    "eventTime": "19:00",
+    "buyLink": "https://liput.musiikkitalofuuga.fi/fi/buyingflow/tickets/15797/22213/",
+    "eventVenue": [
+     "Konserttisali"
+    ],
+    "eventSerial": [
+     "Keikarit &#8211; ensimmäinen jäähyväiskiertue"
+    ],
+    "eventGen": [
+     "Talkshow"
+    ],
+    "eventTitle": "Sami &#038; Jorma: Keikarit &#8211; ensimmäinen jäähyväiskiertue",
+    "serieImage": "<img width=\"1920\" height=\"1080\" src=\"https://www.musiikkitalofuuga.fi/wp-content/uploads/sites/7/2026/04/Keikarit-uusi-1920x1080px.webp\" class=\"serie-image\" alt=\"\" decoding=\"async\" loading=\"lazy\" srcset=\"https://www.musiikkitalofuuga.fi/wp-content/uploads/sites/7/2026/04/Keikarit-uusi-1920x1080px.webp 1920w, https://www.musiikkitalofuuga.fi/wp-content/uploads/sites/7/2026/04/Keikarit-uusi-1920x1080px-300x169.webp 300w, https://www.musiikkitalofuuga.fi/wp-content/uploads/sites/7/2026/04/Keikarit-uusi-1920x1080px-1024x576.webp 1024w, https://www.musiikkitalofuuga.fi/wp-content/uploads/sites/7/2026/04/Keikarit-uusi-1920x1080px-768x432.webp 768w, https://www.musiikkitalofuuga.fi/wp-content/uploads/sites/7/2026/04/Keikarit-uusi-1920x1080px-1536x864.webp 1536w\" sizes=\"auto, (max-width: 1920px) 100vw, 1920px\" />",
+    "serieLink": "https://www.musiikkitalofuuga.fi/tapahtumat/keikarit/",
+    "eventMinPrice": "Alkaen 44,90 €",
+    "capacityStatus": "yellow",
+    "capacityText": "Lippuja rajoitetusti",
+    "showBuyLink": true,
+    "dimPrice": false,
+    "buyTicketsText": "Osta lippuja",
+    "readMoreText": "Lue lisää",
+    "readMoreAriaLabel": "Sami &#038; Jorma: Keikarit &#8211; ensimmäinen jäähyväiskiertue, Lue lisää",
+    "buyTicketsAriaLabel": "Sami &#038; Jorma: Keikarit &#8211; ensimmäinen jäähyväiskiertue, Osta lippuja, Avautuu uuteen välilehteen"
+   }
+  },
+  {
+   "component": "Events",
+   "data": {
+    "title": "Kyiv Classic Ballet &#8211; JOUTSENLAMPI",
+    "imgHtml": "",
+    "date": "14.11.2026",
+    "categories": "Konserttisali, Musiikkitalo Fuuga, JOUTSENLAMPI &#8211; Kyiv Classic Ballet, Tanssi",
+    "url": "https://www.musiikkitalofuuga.fi/events/kyiv-classic-ballet-joutsenlampi/",
+    "eventDateDay": "Lauantai",
+    "eventDateDayNum": "30",
+    "eventDateMonth": "tammikuuta",
+    "eventTime": "19:00",
+    "buyLink": "https://liput.musiikkitalofuuga.fi/fi/buyingflow/tickets/15914/22602/",
+    "eventVenue": [
+     "Konserttisali"
+    ],
+    "eventSerial": [
+     "JOUTSENLAMPI &#8211; Kyiv Classic Ballet"
+    ],
+    "eventGen": [
+     "Tanssi"
+    ],
+    "eventTitle": "Kyiv Classic Ballet &#8211; JOUTSENLAMPI",
+    "serieImage": "<img width=\"1920\" height=\"1080\" src=\"https://www.musiikkitalofuuga.fi/wp-content/uploads/sites/7/2026/06/Joutsenlampi_2027_artwork_1920x1080px.webp\" class=\"serie-image\" alt=\"\" decoding=\"async\" loading=\"lazy\" srcset=\"https://www.musiikkitalofuuga.fi/wp-content/uploads/sites/7/2026/06/Joutsenlampi_2027_artwork_1920x1080px.webp 1920w, https://www.musiikkitalofuuga.fi/wp-content/uploads/sites/7/2026/06/Joutsenlampi_2027_artwork_1920x1080px-300x169.webp 300w, https://www.musiikkitalofuuga.fi/wp-content/uploads/sites/7/2026/06/Joutsenlampi_2027_artwork_1920x1080px-1024x576.webp 1024w, https://www.musiikkitalofuuga.fi/wp-content/uploads/sites/7/2026/06/Joutsenlampi_2027_artwork_1920x1080px-768x432.webp 768w, https://www.musiikkitalofuuga.fi/wp-content/uploads/sites/7/2026/06/Joutsenlampi_2027_artwork_1920x1080px-1536x864.webp 1536w\" sizes=\"auto, (max-width: 1920px) 100vw, 1920px\" />",
+    "serieLink": "https://www.musiikkitalofuuga.fi/tapahtumat/joutsenlampi/",
+    "eventMinPrice": "Alkaen 39,50 €",
+    "capacityStatus": "red",
+    "capacityText": "Loppuunmyyty",
+    "showBuyLink": false,
+    "dimPrice": true,
+    "buyTicketsText": "Osta lippuja",
+    "readMoreText": "Lue lisää",
+    "readMoreAriaLabel": "Kyiv Classic Ballet &#8211; JOUTSENLAMPI, Lue lisää",
+    "buyTicketsAriaLabel": "Kyiv Classic Ballet &#8211; JOUTSENLAMPI, Osta lippuja, Avautuu uuteen välilehteen"
+   }
+  },
+  {
+   "component": "Events",
+   "data": {
+    "title": "TFO: Katedraali soi",
+    "imgHtml": "",
+    "date": "14.11.2026",
+    "categories": "Martinkirkko, Martinkirkko, TFO: Katedraali soi, Kamarimusiikki, Klassinen",
+    "url": "https://www.musiikkitalofuuga.fi/events/tfo-katedraali-soi/",
+    "eventDateDay": "Torstai",
+    "eventDateDayNum": "11",
+    "eventDateMonth": "helmikuuta",
+    "eventTime": "19:00",
+    "buyLink": "https://liput.musiikkitalofuuga.fi/fi/tfo/buyingflow/tickets/16018/22825/",
+    "eventVenue": [
+     "Martinkirkko"
+    ],
+    "eventSerial": [
+     "TFO: Katedraali soi"
+    ],
+    "eventGen": [
+     "Kamarimusiikki",
+     "Klassinen"
+    ],
+    "eventTitle": "TFO: Katedraali soi",
+    "serieImage": "<img width=\"1920\" height=\"1080\" src=\"https://www.musiikkitalofuuga.fi/wp-content/uploads/sites/7/2026/04/TFO_harjoitukset-1920x1080-1.webp\" class=\"serie-image\" alt=\"\" decoding=\"async\" loading=\"lazy\" srcset=\"https://www.musiikkitalofuuga.fi/wp-content/uploads/sites/7/2026/04/TFO_harjoitukset-1920x1080-1.webp 1920w, https://www.musiikkitalofuuga.fi/wp-content/uploads/sites/7/2026/04/TFO_harjoitukset-1920x1080-1-300x169.webp 300w, https://www.musiikkitalofuuga.fi/wp-content/uploads/sites/7/2026/04/TFO_harjoitukset-1920x1080-1-1024x576.webp 1024w, https://www.musiikkitalofuuga.fi/wp-content/uploads/sites/7/2026/04/TFO_harjoitukset-1920x1080-1-768x432.webp 768w, https://www.musiikkitalofuuga.fi/wp-content/uploads/sites/7/2026/04/TFO_harjoitukset-1920x1080-1-1536x864.webp 1536w\" sizes=\"auto, (max-width: 1920px) 100vw, 1920px\" />",
+    "serieLink": "https://www.musiikkitalofuuga.fi/tapahtumat/tfo-katedraali-soi/",
+    "eventMinPrice": "Alkaen 6,00 €",
+    "capacityStatus": "green",
+    "capacityText": "Lippuja saatavilla",
+    "showBuyLink": true,
+    "dimPrice": false,
+    "buyTicketsText": "Osta lippuja",
+    "readMoreText": "Lue lisää",
+    "readMoreAriaLabel": "TFO: Katedraali soi, Lue lisää",
+    "buyTicketsAriaLabel": "TFO: Katedraali soi, Osta lippuja, Avautuu uuteen välilehteen"
+   }
+  },
+  {
+   "component": "Events",
+   "data": {
+    "title": "Mirjam Helin: Alkuerä 1",
+    "imgHtml": "",
+    "date": "14.11.2026",
+    "categories": "Sigyn-sali, Sigyn sali, Mirjam Helin -laulukilpailu, Klassinen",
+    "url": "https://www.musiikkitalofuuga.fi/events/mirjam-helin-alkuera-1/",
+    "eventDateDay": "Maanantai",
+    "eventDateDayNum": "7",
+    "eventDateMonth": "kesäkuuta",
+    "eventTime": "17:00",
+    "buyLink": "https://liput.kulttuuriranta.fi/fi/buyingflow/tickets/15771/22099/",
+    "eventVenue": [
+     "Sigyn-sali"
+    ],
+    "eventSerial": [
+     "Mirjam Helin -laulukilpailu"
+    ],
+    "eventGen": [
+     "Klassinen"
+    ],
+    "eventTitle": "Mirjam Helin: Alkuerä 1",
+    "serieImage": "<img width=\"1920\" height=\"1080\" src=\"https://www.musiikkitalofuuga.fi/wp-content/uploads/sites/7/2026/04/Fuuga-sulka-logolla.webp\" class=\"serie-image\" alt=\"\" decoding=\"async\" loading=\"lazy\" srcset=\"https://www.musiikkitalofuuga.fi/wp-content/uploads/sites/7/2026/04/Fuuga-sulka-logolla.webp 1920w, https://www.musiikkitalofuuga.fi/wp-content/uploads/sites/7/2026/04/Fuuga-sulka-logolla-300x169.webp 300w, https://www.musiikkitalofuuga.fi/wp-content/uploads/sites/7/2026/04/Fuuga-sulka-logolla-1024x576.webp 1024w, https://www.musiikkitalofuuga.fi/wp-content/uploads/sites/7/2026/04/Fuuga-sulka-logolla-768x432.webp 768w, https://www.musiikkitalofuuga.fi/wp-content/uploads/sites/7/2026/04/Fuuga-sulka-logolla-1536x864.webp 1536w\" sizes=\"auto, (max-width: 1920px) 100vw, 1920px\" />",
+    "serieLink": "https://www.musiikkitalofuuga.fi/tapahtumat/mirjam-helin-laulukilpailu/",
+    "eventMinPrice": "Alkaen 15,00 €",
+    "capacityStatus": "yellow",
+    "capacityText": "Lippuja rajoitetusti",
+    "showBuyLink": true,
+    "dimPrice": false,
+    "buyTicketsText": "Osta lippuja",
+    "readMoreText": "Lue lisää",
+    "readMoreAriaLabel": "Mirjam Helin: Alkuerä 1, Lue lisää",
+    "buyTicketsAriaLabel": "Mirjam Helin: Alkuerä 1, Osta lippuja, Avautuu uuteen välilehteen"
+   }
+  }
+ ]
+}

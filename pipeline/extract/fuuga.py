@@ -1,62 +1,69 @@
+import html
+import json
 import re
 from datetime import date
 
-from bs4 import BeautifulSoup
+import httpx
+
+from pipeline.dates import infer_date
 
 SOURCE = "fuuga"
 VENUE = "Fuuga"
-LIST_URL = "https://tfo.fi/tapahtumat/"
-MAX_PAGES = 20
-# "Musiikkitalo Fuuga, Konserttisali" -> "Fuuga" (no room names, same as Fuusio)
-_SOLD_OUT = re.compile(r"^(?:loppuunmyyty|sold out):\s*", re.I)
+API_URL = "https://www.musiikkitalofuuga.fi/wp-json/karhu-content-filtered-search/v1/get-content"
+MAX_PAGES = 40
+MONTHS = {
+    "tammikuuta": 1, "helmikuuta": 2, "maaliskuuta": 3, "huhtikuuta": 4, "toukokuuta": 5, "kesäkuuta": 6,
+    "heinäkuuta": 7, "elokuuta": 8, "syyskuuta": 9, "lokakuuta": 10, "marraskuuta": 11, "joulukuuta": 12,
+}
+# Fuuga also hosts talk shows and ballet; a gig with only these genres is not music.
+NON_MUSIC_GENRES = {"talkshow", "tanssi"}
+# Rooms inside the house are all just "Fuuga" (same choice as Fuusio); other places keep their name.
+FUUGA_ROOMS = {"konserttisali", "ateljee", "viinibaari fino"}
 
 
-def _venue(location: str) -> str | None:
-    """Venue name for a concert, or None when it is played outside Turku."""
-    if "fuuga" in location.lower():
-        return VENUE
-    if "helsingin" in location.lower():  # the orchestra tours, e.g. a Helsinki Music Centre guest concert
-        return None
-    return location or VENUE
+def _text(value: str) -> str:
+    return " ".join(html.unescape(value).split())
 
 
-def parse(html: str, today: date) -> list[dict]:
-    soup = BeautifulSoup(html, "lxml")
+def parse(data: dict, today: date) -> list[dict]:
+    """Turn one page of the site's search API response into event dicts."""
     events = []
-    for art in soup.select("article.tapahtuma-lift-item"):
-        link = art.select_one("h3 a")
-        when = art.select_one(".tapahtuma-lift-meta")
-        if not (link and when):
+    for item in data.get("contentList") or []:
+        d = item.get("data", {})
+        month = MONTHS.get(str(d.get("eventDateMonth", "")).lower())
+        if not (month and str(d.get("eventDateDayNum", "")).isdigit() and d.get("title") and d.get("url")):
             continue
-        m = re.search(r"(\d{1,2})\.(\d{1,2})\.(\d{4}),\s*(\d{1,2}):(\d{2})", " ".join(when.get_text(" ").split()))
-        if not m:
+        genres = {_text(g).lower() for g in d.get("eventGen") or []}
+        if genres and genres <= NON_MUSIC_GENRES:
             continue
-        location = art.select_one(".tapahtuma-lift-location")
-        venue = _venue(" ".join(location.get_text(" ").split())) if location else VENUE
-        if venue is None:
-            continue
+        # "date" in the response is the first night of a run, so the real night comes from the day/month fields.
+        day = infer_date(int(d["eventDateDayNum"]), month, today, str(d.get("eventDateDay", "")).lower() or None)
+        room = _text((d.get("eventVenue") or [""])[0])
+        start = re.match(r"\d{1,2}:\d{2}", d.get("eventTime") or "")
         events.append({
             "source": SOURCE,
-            "venue": venue,
-            "title": _SOLD_OUT.sub("", " ".join(link.get_text(" ").split())),
-            "date": date(int(m.group(3)), int(m.group(2)), int(m.group(1))).isoformat(),
+            "venue": VENUE if room.lower() in FUUGA_ROOMS or not room else room,
+            "title": _text(d["title"]),
+            "date": day.isoformat(),
             "doors": None,
-            "start": f"{int(m.group(4)):02d}:{m.group(5)}",
+            "start": f"{int(start.group().split(':')[0]):02d}:{start.group().split(':')[1]}" if start else None,
             "age_limit": None,
-            "url": link["href"],
+            "url": d["url"],
         })
     return events
 
 
 def extract(today: date) -> list[dict]:
-    from pipeline.fetch import fetch_raw
-    events, seen = [], set()
+    from pipeline.fetch import HEADERS, save_raw
+    events = []
     for page in range(1, MAX_PAGES + 1):
-        url = LIST_URL if page == 1 else f"{LIST_URL}?page={page}"
-        batch = parse(fetch_raw(SOURCE, url, today, f"page{page}"), today)
-        fresh = [e for e in batch if (e["url"], e["date"]) not in seen]
-        if not fresh:  # past the last page the site just returns an empty list
+        body = {"page": page, "search_key": "", "filters": {}, "post_types": "event", "show_only_terms": "",
+                "dynamic_filters": "", "filter_options": "", "lang": "fi", "meta": {}}
+        resp = httpx.post(API_URL, json=body, headers=HEADERS, timeout=30)
+        resp.raise_for_status()
+        save_raw(SOURCE, today, f"page{page}", resp.text)
+        data = resp.json()
+        if not data.get("contentList"):  # past the last page the list is simply empty
             break
-        seen.update((e["url"], e["date"]) for e in fresh)
-        events.extend(fresh)
+        events.extend(parse(data, today))
     return events
