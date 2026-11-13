@@ -1,0 +1,7 @@
+httpx
+beautifulsoup4
+lxml
+duckdb
+jinja2
+pyyaml
+pytest
