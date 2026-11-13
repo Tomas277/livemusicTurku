@@ -3,3 +3,9 @@ __pycache__/
 .pytest_cache/
 raw/
 *.duckdb
+
+# AI assistant instruction files
+CLAUDE.md
+AGENTS.md
+.claude/
+site/

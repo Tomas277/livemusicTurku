@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="{{ lang }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ t.title }}</title>
+  <meta name="description" content="{{ t.tagline }}">
+  <meta name="color-scheme" content="light dark">
+  <link rel="stylesheet" href="../static/style.css">
+</head>
+<body>
+  <header class="top">
+    <div class="wrap">
+      <div class="brand">
+        <h1>{{ t.title }}</h1>
+        <p>{{ t.tagline }}</p>
+      </div>
+      <a class="lang" href="../{{ t.other_lang_code }}/" hreflang="{{ t.other_lang_code }}">{{ t.other_lang }}</a>
+    </div>
+  </header>
+
+  <nav class="filters" aria-label="Filters">
+    <div class="wrap">
+      <div class="chips" role="group">
+        <button class="chip" data-range="all" aria-pressed="true">{{ t.all }}</button>
+        <button class="chip" data-range="today" aria-pressed="false">{{ t.today }}</button>
+        <button class="chip" data-range="weekend" aria-pressed="false">{{ t.weekend }}</button>
+      </div>
+      <label class="venue-select">
+        <span class="sr">{{ t.venue }}</span>
+        <select id="venue">
+          <option value="">{{ t.all_venues }}</option>
+          {% for v in venues %}<option value="{{ v }}">{{ v }}</option>{% endfor %}
+        </select>
+      </label>
+    </div>
+  </nav>
+
+  <main class="wrap">
+    {% for day in days %}
+    <section class="day" data-date="{{ day.date }}">
+      <h2>{{ day.label }}</h2>
+      <ul class="events">
+        {% for e in day.events %}
+        <li class="event" data-venue="{{ e.venue }}">
+          <a href="{{ e.url }}" rel="noopener">
+            <div class="main">
+              <h3>{{ e.title }}</h3>
+              <p class="venue">{{ e.venue }}</p>
+            </div>
+            <div class="meta">
+              {% if e.doors %}<span>{{ t.doors }} {{ e.doors }}</span>{% endif %}
+              {% if e.start %}<span>{{ t.start }} {{ e.start }}</span>{% endif %}
+              {% if e.age %}<span class="age">{{ e.age }}</span>{% endif %}
+            </div>
+          </a>
+        </li>
+        {% endfor %}
+      </ul>
+    </section>
+    {% endfor %}
+    <p id="empty" class="empty" hidden>{{ t.empty }}</p>
+  </main>
+
+  <footer class="wrap foot">{{ t.updated }} {{ built_on }}</footer>
+  <script src="../static/app.js" defer></script>
+</body>
+</html>
