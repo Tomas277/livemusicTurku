@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write   # the history file is committed back to the repo
   pages: write
   id-token: write
 
@@ -34,6 +34,20 @@ jobs:
         # A broken scraper must not stop the site updating; the "alert" job fails the run afterwards.
         continue-on-error: true
         run: python -m pipeline.run
+      - name: Save event history
+        # The history CSV is the project's database. Committing it keeps it between runs for free.
+        # Pushes made with GITHUB_TOKEN do not start another workflow run.
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/warehouse/events_history.csv
+          if git diff --cached --quiet; then
+            echo "History unchanged"
+          else
+            git commit -m "Update event history"
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
       - name: Build site
         run: python -m site_builder.build
       - name: Keep raw pages (90 days)

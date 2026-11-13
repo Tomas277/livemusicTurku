@@ -1,4 +1,4 @@
--- Latest scrape of each source, cleaned, one row per gig, music events only.
+-- Today's scrape of each source, cleaned, one row per gig, music events only.
 CREATE SCHEMA IF NOT EXISTS int;
 
 -- Seed: title patterns (regex, matched on lower-case) for events that are not music.
@@ -16,7 +16,7 @@ SELECT
     age_limit,
     url
 FROM staging.events_raw r
-WHERE scraped_on = (SELECT max(scraped_on) FROM staging.events_raw WHERE source = r.source)
+WHERE scraped_on = DATE '{{today}}'
   AND NOT EXISTS (
       SELECT 1 FROM int.non_music_patterns p WHERE regexp_matches(lower(r.title), p.pattern)
   )

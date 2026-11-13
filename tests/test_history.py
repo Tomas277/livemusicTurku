@@ -1,0 +1,108 @@
+from datetime import date, timedelta
+
+import duckdb
+
+from pipeline import history
+from pipeline.load import load
+from pipeline.run import transform
+
+D1 = date(2026, 11, 13)
+D2 = D1 + timedelta(days=1)
+
+
+def ev(title, day="2026-12-01", source="dynamo", venue="Dynamo"):
+    return {"source": source, "venue": venue, "title": title, "date": day,
+            "doors": "20:00", "start": None, "age_limit": 18, "url": f"https://x/{title}"}
+
+
+def run_day(con, today, events_by_source):
+    """One pipeline day: load each successful source, then transform."""
+    for source, events in events_by_source.items():
+        load(con, source, events, today)
+    transform(con, today)
+
+
+def site(con):
+    return sorted(r[0] for r in con.execute("SELECT title FROM marts.upcoming_events").fetchall())
+
+
+def rows(con):
+    return {r[0]: r[1:] for r in con.execute(
+        "SELECT title, first_seen, last_seen FROM history.events_history").fetchall()}
+
+
+def new_con():
+    con = duckdb.connect()
+    con.execute("CREATE SCHEMA history")
+    con.execute("CREATE TABLE history.events_history (source VARCHAR, venue VARCHAR, title VARCHAR, "
+                "date DATE, doors VARCHAR, start VARCHAR, age_limit INTEGER, url VARCHAR, "
+                "first_seen DATE, last_seen DATE)")
+    return con
+
+
+def test_first_seen_is_kept_and_last_seen_moves():
+    con = new_con()
+    run_day(con, D1, {"dynamo": [ev("A")]})
+    run_day(con, D2, {"dynamo": [ev("A")]})
+    assert rows(con)["A"] == (D1, D2)
+
+
+def test_gig_that_vanishes_stays_in_history_but_leaves_the_site():
+    con = new_con()
+    run_day(con, D1, {"dynamo": [ev("A"), ev("B")]})
+    run_day(con, D2, {"dynamo": [ev("A")]})
+    assert rows(con)["B"] == (D1, D1)       # remembered, last seen yesterday
+    assert site(con) == ["A"]               # but no longer shown
+
+
+def test_failed_source_keeps_its_last_good_gigs_on_the_site():
+    con = new_con()
+    run_day(con, D1, {"dynamo": [ev("A")], "kuka": [ev("K", source="kuka", venue="Kuka")]})
+    run_day(con, D2, {"kuka": [ev("K", source="kuka", venue="Kuka")]})  # dynamo failed today
+    assert site(con) == ["A", "K"]
+    assert rows(con)["A"] == (D1, D1)       # not marked as seen today
+
+
+def test_stale_source_is_dropped_after_a_week():
+    con = new_con()
+    run_day(con, D1, {"dynamo": [ev("A")]})
+    run_day(con, D1 + timedelta(days=7), {})
+    assert site(con) == ["A"]
+    run_day(con, D1 + timedelta(days=8), {})
+    assert site(con) == []
+
+
+def test_same_day_rerun_changes_nothing():
+    con = new_con()
+    run_day(con, D1, {"dynamo": [ev("A"), ev("B")]})
+    before = con.execute("SELECT * FROM history.events_history ORDER BY title").fetchall()
+    run_day(con, D1, {"dynamo": [ev("A"), ev("B")]})
+    assert con.execute("SELECT * FROM history.events_history ORDER BY title").fetchall() == before
+
+
+def test_csv_round_trip(tmp_path):
+    con = new_con()
+    run_day(con, D1, {"dynamo": [ev('Band, "The" Best'), ev("B")]})
+    path = tmp_path / "w" / "events_history.csv"
+    history.save(con, path)
+
+    other = duckdb.connect()
+    history.restore(other, path)
+    cols = "source, venue, title, date, doors, start, age_limit, url, first_seen, last_seen"
+    q = f"SELECT {cols} FROM history.events_history ORDER BY title"
+    assert other.execute(q).fetchall() == con.execute(q).fetchall()
+    assert other.execute("SELECT typeof(doors), typeof(date) FROM history.events_history LIMIT 1").fetchone() \
+        == ("VARCHAR", "DATE")
+
+
+def test_restore_without_a_file_starts_empty(tmp_path):
+    con = duckdb.connect()
+    history.restore(con, tmp_path / "missing.csv")
+    assert con.execute("SELECT count(*) FROM history.events_history").fetchone()[0] == 0
+
+
+def test_previous_upcoming_count():
+    con = new_con()
+    run_day(con, D1, {"dynamo": [ev("A"), ev("B"), ev("Old", day="2026-11-01")]})
+    assert history.previous_upcoming_count(con, "dynamo", D1) == 2   # the past gig doesn't count
+    assert history.previous_upcoming_count(con, "kuka", D1) == 0
