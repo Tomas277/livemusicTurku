@@ -6,7 +6,7 @@ from pathlib import Path
 import duckdb
 
 from pipeline import checks, history
-from pipeline.extract import apollo, dynamo, fuusio, kuka
+from pipeline.extract import apollo, dynamo, fuuga, fuusio, kuka, logomo
 from pipeline.load import load
 
 WAREHOUSE = Path("data/warehouse.duckdb")
@@ -14,7 +14,7 @@ WAREHOUSE = Path("data/warehouse.duckdb")
 HISTORY_CSV = Path(os.environ.get("LIVEMUSIC_HISTORY", "data/warehouse/events_history.csv"))
 TRANSFORM_DIR = Path(__file__).parent / "transform"
 SEEDS_DIR = Path(__file__).parent / "seeds"
-SOURCES = {"dynamo": dynamo, "kuka": kuka, "apollo": apollo, "fuusio": fuusio}
+SOURCES = {"dynamo": dynamo, "kuka": kuka, "apollo": apollo, "fuusio": fuusio, "fuuga": fuuga, "logomo": logomo}
 
 
 def transform(con: duckdb.DuckDBPyConnection, today: date) -> None:
