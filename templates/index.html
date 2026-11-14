@@ -6,18 +6,20 @@
   <title>{{ t.title }}</title>
   <meta name="description" content="{{ t.description }}">
   <meta name="color-scheme" content="light dark">
-  <link rel="preload" href="../static/fonts/fraunces-vf-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="../static/fonts/unifrakturcook-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="../static/fonts/playfair-display-vf-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="../static/style.css">
 </head>
 <body>
-  <header class="top">
-    <div class="wrap bar">
-      <a class="wordmark" href="./">{{ t.title }}</a>
-      <a class="lang" href="../{{ t.other_lang_code }}/" hreflang="{{ t.other_lang_code }}">{{ t.other_lang }}</a>
-    </div>
-    <div class="wrap hero">
-      <h1>{{ t.hero_a }} <em>{{ t.hero_b }}</em></h1>
-      <p>{{ t.hero_text }}</p>
+  <header class="masthead">
+    <div class="wrap">
+      <div class="ears">
+        <span class="edition">{{ t.edition }}</span>
+        <time class="dateline" id="dateline" datetime="{{ built_on }}">{{ dateline }}</time>
+        <a class="lang" href="../{{ t.other_lang_code }}/" hreflang="{{ t.other_lang_code }}">{{ t.other_lang }}</a>
+      </div>
+      <h1 class="nameplate"><a href="./">{{ t.title }}</a></h1>
+      <p class="motto">{{ t.hero_text }}</p>
     </div>
   </header>
 

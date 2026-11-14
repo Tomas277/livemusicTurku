@@ -51,7 +51,8 @@ def render(events: list[dict], built_on: date, out: Path = SITE) -> None:
         }
         page = env.get_template("index.html").render(
             t=t, lang=lang, months=months, venues=[{"name": v, "color": colors[v]} for v in venues],
-            built_on=built_on.isoformat(), js_strings=js_strings)
+            built_on=built_on.isoformat(), js_strings=js_strings,
+            dateline=format_day(built_on, lang) + f" {built_on.year}")
         (out / lang).mkdir(parents=True, exist_ok=True)
         (out / lang / "index.html").write_text(page, encoding="utf-8")
 
