@@ -28,12 +28,11 @@ def test_entry_badges(tmp_path):
     render(EVENTS, date(2026, 11, 14), tmp_path)
     fi = (tmp_path / "fi" / "index.html").read_text(encoding="utf-8")
     en = (tmp_path / "en" / "index.html").read_text(encoding="utf-8")
-    # Same three states everywhere: tickets, sold out, or nothing (free entry shows no badge).
-    assert fi.count('class="status plain">Liput') == 1 and en.count('class="status plain">Tickets') == 1
-    assert 'class="status' in fi and "Vapaa pääsy" not in fi and "Free entry" not in en
+    # Only "sold out" gets a badge; free entry, tickets and unknown all show nothing.
+    assert 'class="status' not in fi and "Vapaa pääsy" not in fi and "Liput" not in fi
     sold = [dict(EVENTS[0], availability="sold_out")]
     render(sold, date(2026, 11, 14), tmp_path)
-    assert "Loppuunmyyty" in (tmp_path / "fi" / "index.html").read_text(encoding="utf-8")
+    assert 'class="status sold_out">Loppuunmyyty' in (tmp_path / "fi" / "index.html").read_text(encoding="utf-8")
 
 
 def test_titles_are_escaped(tmp_path):

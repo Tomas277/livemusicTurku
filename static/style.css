@@ -57,7 +57,7 @@ h2 { font-family: var(--serif); font-weight: 500; font-size: clamp(1.6rem, 4vw, 
 .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 440px), 1fr)); gap: 12px; }
 
 /* Event card */
-.ev { position: relative; display: grid; grid-template-columns: 64px 1fr auto; align-items: center; gap: 16px; padding: 14px 18px 14px 14px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); text-decoration: none; transition: transform .15s ease, border-color .15s ease, box-shadow .15s ease; }
+.ev { position: relative; display: grid; grid-template-columns: 64px 1fr; align-items: center; gap: 16px; padding: 14px 18px 14px 14px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); text-decoration: none; transition: transform .15s ease, border-color .15s ease, box-shadow .15s ease; }
 .ev:hover, .ev:has(.ev-link:focus-visible) { border-color: var(--vc); transform: translateY(-2px); box-shadow: 0 8px 24px -12px rgb(0 0 0 / .25); }
 .ev-date { display: grid; justify-items: center; align-content: center; width: 64px; height: 72px; border-radius: 12px; background: color-mix(in srgb, var(--vc) 13%, var(--surface)); color: var(--ink); line-height: 1; }
 .ev-date .dow { font-size: .68rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--vc); }
@@ -69,8 +69,6 @@ h2 { font-family: var(--serif); font-weight: 500; font-size: clamp(1.6rem, 4vw, 
 .venue { display: inline-flex; align-items: center; gap: 6px; color: var(--ink); font-weight: 500; }
 .venue i { width: 8px; height: 8px; border-radius: 50%; background: var(--vc); }
 .age { border: 1px solid var(--line); border-radius: 5px; padding: 0 5px; font-size: .78rem; }
-.go { color: var(--muted); font-size: 1.2rem; transition: transform .15s, color .15s; }
-.ev:hover .go { color: var(--vc); transform: translateX(3px); }
 
 /* Month pills (Coming up) */
 .month-pills { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 26px; }
@@ -86,7 +84,7 @@ h2 { font-family: var(--serif); font-weight: 500; font-size: clamp(1.6rem, 4vw, 
 .day-group h2 span { font-family: var(--sans); font-size: .9rem; font-weight: 400; color: var(--muted); letter-spacing: 0; }
 .day-group.is-today h2::before { content: ""; width: 10px; height: 10px; border-radius: 50%; background: var(--accent); align-self: center; }
 .day-group .ev-date { display: none; }
-.day-group .ev { grid-template-columns: 1fr auto; padding-left: 20px; }
+.day-group .ev { grid-template-columns: 1fr; padding-left: 20px; }
 
 /* Calendar */
 .cal-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
@@ -117,9 +115,7 @@ h2 { font-family: var(--serif); font-weight: 500; font-size: clamp(1.6rem, 4vw, 
 
 @media (max-width: 560px) {
   .ev { grid-template-columns: 56px 1fr; gap: 14px; }
-  .ev .go { display: none; }
   .ev-date { width: 56px; height: 66px; }
-  .day-group .ev { grid-template-columns: 1fr; }
   .cal-grid { gap: 3px; }
   .cal-cell { min-height: 52px; padding-inline: 1px; }
   .tabs button { padding: 8px 13px; font-size: .88rem; }
@@ -131,12 +127,14 @@ h2 { font-family: var(--serif); font-weight: 500; font-size: clamp(1.6rem, 4vw, 
 .ev-link::after { content: ""; position: absolute; inset: 0; border-radius: var(--radius); }
 .ev-link:focus-visible { outline: none; }
 .ev:has(.ev-link:focus-visible) { outline: 2px solid var(--vc); outline-offset: 2px; }
-.ev { padding-right: 58px; }
-.ics { position: absolute; top: 50%; right: 12px; transform: translateY(-50%); z-index: 1; display: grid; place-items: center; width: 32px; height: 32px; padding: 0; border: 0; border-radius: 8px; background: none; color: var(--muted); }
-.ics:hover, .ics:focus-visible { color: var(--vc); background: color-mix(in srgb, var(--vc) 13%, transparent); }
+.ev { padding-right: 68px; }
+.ics { position: absolute; top: 50%; right: 14px; transform: translateY(-50%); z-index: 1; display: grid; place-items: center; width: 40px; height: 40px; padding: 0; border: 1px solid var(--line); border-radius: 50%; background: var(--surface); color: var(--ink); transition: border-color .15s, background .15s, color .15s; }
+.ev:hover .ics { border-color: var(--vc); }
+.ics:hover, .ics:focus-visible { background: var(--vc); border-color: var(--vc); color: #fff; }
+@media (max-width: 560px) { .ev { padding-right: 60px; } .ics { right: 10px; width: 36px; height: 36px; } }
 
-/* Entry: tickets, or sold out. Shown only when the venue's own page says so. */
-.status { margin: 7px 0 0; display: inline-flex; align-items: center; gap: 6px; font-size: .78rem; font-weight: 600; letter-spacing: .01em; padding: 2px 10px; border-radius: 999px; background: var(--soft); color: var(--muted); }
+/* Sold out: shown only when the venue's own page says so. */
+.status { display: inline-flex; align-items: center; font-size: .74rem; font-weight: 700; letter-spacing: .02em; text-transform: uppercase; padding: 0 8px; border-radius: 999px; }
 .status.sold_out { color: #b3261e; background: color-mix(in srgb, #d93025 13%, var(--surface)); }
 @media (prefers-color-scheme: dark) { .status.sold_out { color: #ff8a80; } }
 .ev.sold-out .ev-body h3, .ev.sold-out .ev-date { opacity: .55; }
