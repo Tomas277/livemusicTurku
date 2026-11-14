@@ -19,7 +19,7 @@ def event_urls(sitemap_xml: str) -> list[str]:
     return [u for u in urls if "/tapahtuma/" in u]  # skips the archive page itself
 
 
-def parse_event(html: str, url: str, today: date) -> dict | None:
+def parse_event(html: str, url: str, today: date) -> Event | None:
     """One Logomo event page -> event dict, or None for pages with no date or past events."""
     soup = BeautifulSoup(html, "lxml")
     title_el = soup.select_one("h1")
@@ -49,10 +49,10 @@ def parse_event(html: str, url: str, today: date) -> dict | None:
         access=access,
         availability=availability,
         url=url,
-    ).as_dict()
+    )
 
 
-def extract(today: date) -> list[dict]:
+def extract(today: date) -> list[Event]:
     from pipeline.fetch import HEADERS, fetch_raw
     sitemap = httpx.get(SITEMAP_URL, headers=HEADERS, follow_redirects=True, timeout=30)
     sitemap.raise_for_status()

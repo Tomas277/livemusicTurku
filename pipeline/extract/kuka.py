@@ -16,7 +16,7 @@ def _clean(text: str) -> str:
     return " ".join(text.replace("­", "").split())
 
 
-def parse(html: str, today: date) -> list[dict]:
+def parse(html: str, today: date) -> list[Event]:
     soup = BeautifulSoup(html, "lxml")
     events = []
     for ev in soup.select("div.event"):
@@ -39,10 +39,10 @@ def parse(html: str, today: date) -> list[dict]:
             access=access,
             availability=availability,
             url=link["href"] if link else PROGRAM_URL,
-        ).as_dict())
+        ))
     return events
 
 
-def extract(today: date) -> list[dict]:
+def extract(today: date) -> list[Event]:
     from pipeline.fetch import fetch_raw
     return parse(fetch_raw(SOURCE, PROGRAM_URL, today), today)

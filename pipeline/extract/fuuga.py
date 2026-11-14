@@ -1,5 +1,4 @@
 import html
-import json
 import re
 from datetime import date
 
@@ -26,7 +25,7 @@ def _text(value: str) -> str:
     return " ".join(html.unescape(value).split())
 
 
-def parse(data: dict, today: date) -> list[dict]:
+def parse(data: dict, today: date) -> list[Event]:
     """Turn one page of the site's search API response into event dicts."""
     events = []
     for item in data.get("contentList") or []:
@@ -54,27 +53,27 @@ def parse(data: dict, today: date) -> list[dict]:
             access="tickets" if has_tickets else None,
             availability=availability,
             url=d["url"],
-        ).as_dict())
+        ))
     return events
 
 
-def _match_key(e: dict) -> tuple:
+def _match_key(e: Event) -> tuple:
     # The orchestra lists the same concert without the "TFO: " style prefix the house uses.
-    title = re.sub(r"^[A-ZÅÄÖ0-9]{2,6}:\s*", "", e["title"]).lower()
-    return e["venue"], e["date"], e["start"], title
+    title = re.sub(r"^[A-ZÅÄÖ0-9]{2,6}:\s*", "", e.title).lower()
+    return e.venue, e.date, e.start, title
 
 
-def dedupe(events: list[dict]) -> list[dict]:
+def dedupe(events: list[Event]) -> list[Event]:
     """One event per concert; of two twins keep the one with the longer (more informative) title."""
-    best: dict[tuple, dict] = {}
+    best: dict[tuple, Event] = {}
     for e in events:
         k = _match_key(e)
-        if k not in best or len(e["title"]) > len(best[k]["title"]):
+        if k not in best or len(e.title) > len(best[k].title):
             best[k] = e
     return list(best.values())
 
 
-def extract(today: date) -> list[dict]:
+def extract(today: date) -> list[Event]:
     from pipeline.fetch import HEADERS, save_raw
     events = []
     for page in range(1, MAX_PAGES + 1):

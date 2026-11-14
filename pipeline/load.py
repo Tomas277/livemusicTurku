@@ -1,11 +1,12 @@
+from dataclasses import astuple
 from datetime import date
 
 import duckdb
 
-from pipeline.event import COLUMNS, OPTIONAL, SQL_TYPES
+from pipeline.event import COLUMNS, SQL_TYPES, Event
 
 
-def load(con: duckdb.DuckDBPyConnection, source: str, events: list[dict], today: date) -> None:
+def load(con: duckdb.DuckDBPyConnection, source: str, events: list[Event], today: date) -> None:
     """Append one scrape of one source to staging.events_raw.
 
     Re-running the same source on the same day replaces that day's rows,
@@ -21,5 +22,5 @@ def load(con: duckdb.DuckDBPyConnection, source: str, events: list[dict], today:
     cols = ", ".join([*COLUMNS, "scraped_on"])
     con.executemany(
         f"INSERT INTO staging.events_raw ({cols}) VALUES ({', '.join('?' * (len(COLUMNS) + 1))})",
-        [[e.get(c) if c in OPTIONAL else e[c] for c in COLUMNS] + [today] for e in events],
+        [[*astuple(e), today] for e in events],
     )

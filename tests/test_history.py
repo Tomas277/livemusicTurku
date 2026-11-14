@@ -1,9 +1,11 @@
+from dataclasses import replace
 from datetime import date, timedelta
 from pathlib import Path
 
 import duckdb
 
 from pipeline import history
+from pipeline.event import Event
 from pipeline.load import load
 from pipeline.run import transform
 
@@ -12,9 +14,8 @@ D2 = D1 + timedelta(days=1)
 
 
 def ev(title, day="2026-12-01", source="dynamo", venue="Dynamo"):
-    return {"source": source, "venue": venue, "title": title, "date": day,
-            "doors": "20:00", "start": None, "age_limit": 18, "url": f"https://x/{title}",
-            "access": "tickets", "availability": "few"}
+    return Event(source=source, venue=venue, title=title, date=day, doors="20:00", age_limit=18,
+                 url=f"https://x/{title}", access="tickets", availability="few")
 
 
 def run_day(con, today, events_by_source):
@@ -120,5 +121,5 @@ def test_restore_reads_a_history_file_from_before_access_columns_existed(tmp_pat
 def test_access_and_availability_reach_the_site_and_update_on_rescrape():
     con = new_con()
     run_day(con, D1, {"dynamo": [ev("A")]})
-    run_day(con, D2, {"dynamo": [dict(ev("A"), availability="sold_out")]})
+    run_day(con, D2, {"dynamo": [replace(ev("A"), availability="sold_out")]})
     assert con.execute("SELECT access, availability FROM marts.upcoming_events").fetchall() == [("tickets", "sold_out")]

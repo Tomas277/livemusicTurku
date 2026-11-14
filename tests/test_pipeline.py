@@ -5,6 +5,7 @@ from pathlib import Path
 import duckdb
 
 from conftest import empty_con
+from pipeline.event import Event
 from pipeline.extract import dynamo
 from pipeline.load import load
 from pipeline.run import transform
@@ -57,8 +58,7 @@ def test_non_music_events_are_filtered_out():
 
 def test_runo_pattern_matches_only_at_word_start():
     def ev(title):
-        return {"source": "t", "venue": "T", "title": title, "date": "2026-12-01",
-                "doors": None, "start": None, "age_limit": None, "url": "u"}
+        return Event(source="t", venue="T", title=title, date="2026-12-01", url="u")
     con = empty_con()
     load(con, "t", [ev("Bruno Mars Tribute"), ev("Runoilta"), ev("Kuka Runoklubi")], TODAY)
     transform(con, TODAY)
@@ -72,14 +72,14 @@ def test_one_broken_source_does_not_stop_the_others(tmp_path, monkeypatch, capsy
     from pipeline import run
 
     def good(today):
-        return [{"source": "good", "venue": "G", "title": "Fine gig", "date": "2026-12-01",
-                 "doors": None, "start": "19:00", "age_limit": 18, "url": "u"}]
+        return [Event(source="good", venue="G", title="Fine gig", date="2026-12-01", start="19:00",
+                      age_limit=18, url="u")]
 
     def raises(today):
         raise RuntimeError("site is down")
 
-    def bad_value(today):  # a string where the database expects a number
-        return [dict(good(today)[0], source="bad", age_limit="K12")]
+    def bad_value(today):  # Event refuses a string where a number belongs
+        return [Event(source="bad", venue="B", title="Odd gig", date="2026-12-01", url="u", age_limit="K12")]
 
     monkeypatch.setattr(run, "SOURCES", {"good": SimpleNamespace(extract=good),
                                          "raises": SimpleNamespace(extract=raises),
@@ -91,5 +91,5 @@ def test_one_broken_source_does_not_stop_the_others(tmp_path, monkeypatch, capsy
         run.main()
     assert exit_info.value.code == 1
     err = capsys.readouterr().err
-    assert "raises: FAILED" in err and "bad: CHECK FAILED" in err
+    assert "raises: FAILED" in err and "bad: FAILED - ValueError" in err
     assert "Fine gig" in (tmp_path / "history.csv").read_text(encoding="utf-8")

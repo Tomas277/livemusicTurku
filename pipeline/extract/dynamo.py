@@ -13,7 +13,7 @@ BASE_URL = "https://www.dynamoklubi.com/"
 PROGRAM_URL = BASE_URL + "ohjelma"
 
 
-def parse(html: str, today: date) -> list[dict]:
+def parse(html: str, today: date) -> list[Event]:
     soup = BeautifulSoup(html, "lxml")
     events = []
     for block in soup.select("div.content_item_article_link"):
@@ -45,10 +45,10 @@ def parse(html: str, today: date) -> list[dict]:
             access=access,
             availability=availability,
             url=BASE_URL + link.group(1) if link else PROGRAM_URL,
-        ).as_dict())
+        ))
     return events
 
 
-def extract(today: date) -> list[dict]:
+def extract(today: date) -> list[Event]:
     from pipeline.fetch import fetch_raw
     return parse(fetch_raw(SOURCE, PROGRAM_URL, today), today)

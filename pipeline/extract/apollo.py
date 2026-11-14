@@ -14,7 +14,7 @@ BASE_URL = "https://apolloturku.fi/"
 PAGES = {"keikat": BASE_URL + "keikat", "bilebandi": BASE_URL + "bilebandi"}
 
 
-def parse(html: str, today: date, page_url: str = PAGES["keikat"]) -> list[dict]:
+def parse(html: str, today: date, page_url: str = PAGES["keikat"]) -> list[Event]:
     """Parse one Apollo listing page. A party band playing "PE 13.11. - LA 14.11."
     becomes one event per night."""
     soup = BeautifulSoup(html, "lxml")
@@ -37,11 +37,11 @@ def parse(html: str, today: date, page_url: str = PAGES["keikat"]) -> list[dict]
                 access=access,
                 availability=availability,
                 url=urljoin(BASE_URL, link["href"]) if link and link.get("href") else page_url,
-            ).as_dict())
+            ))
     return events
 
 
-def extract(today: date) -> list[dict]:
+def extract(today: date) -> list[Event]:
     from pipeline.fetch import fetch_raw
     events = []
     for name, url in PAGES.items():

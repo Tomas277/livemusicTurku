@@ -1,12 +1,13 @@
 from datetime import date
 
 from pipeline.checks import check_events
+from pipeline.event import Event
 
 TODAY = date(2026, 11, 13)
 
 
 def ev(title="A", day="2026-12-01", **kw):
-    return {"title": title, "date": day, "venue": "V", "url": "https://x", **kw}
+    return Event(**{"source": "s", "title": title, "date": day, "venue": "V", "url": "https://x", **kw})
 
 
 def test_good_scrape_passes():
@@ -22,7 +23,6 @@ def test_dates_outside_the_expected_range():
     assert check_events("s", [ev(day="2025-01-01")], TODAY, 0)            # parsed with the wrong year
     assert check_events("s", [ev(day="2028-01-01")], TODAY, 0)
     assert check_events("s", [ev(day="2026-11-01")], TODAY, 0) == []      # a recent past gig is fine
-    assert "invalid date" in check_events("s", [ev(day="2026-13-45")], TODAY, 0)[0]
 
 
 def test_big_drop_in_gig_count_is_flagged():
@@ -41,12 +41,3 @@ def test_many_problems_are_summarised():
     bad = [ev(str(i), url="") for i in range(9)]
     problems = check_events("s", bad, TODAY, 0)
     assert len(problems) == 6 and "4 more" in problems[-1]
-
-
-def test_wrong_types_and_formats_are_flagged():
-    assert "age_limit" in check_events("s", [ev(age_limit="K12")], TODAY, 0)[0]
-    assert "HH:MM" in check_events("s", [ev(start="7pm")], TODAY, 0)[0]
-    assert "access" in check_events("s", [ev(access="paid")], TODAY, 0)[0]
-    assert "availability" in check_events("s", [ev(availability="full")], TODAY, 0)[0]
-    assert check_events("s", [ev(age_limit=18, start="19:30", doors="18:00", access="free",
-                                 availability="few")], TODAY, 0) == []

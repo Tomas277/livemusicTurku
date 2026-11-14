@@ -24,7 +24,7 @@ def _clean_title(title: str) -> str:
     return _STAGE_PREFIX.sub("", _STAGE_SUFFIX.sub("", " ".join(title.split())))
 
 
-def parse(html: str, today: date | None = None) -> list[dict]:
+def parse(html: str, today: date | None = None) -> list[Event]:
     """Parse a full program page or the HTML fragment the 'Next' button loads."""
     soup = BeautifulSoup(html, "lxml")
     events = []
@@ -39,7 +39,7 @@ def parse(html: str, today: date | None = None) -> list[dict]:
             title=_clean_title(link.get_text()),
             date=when["datetime"][:10],
             url=link["href"],
-        ).as_dict())
+        ))
     return events
 
 
@@ -79,7 +79,7 @@ def next_page_request(html: str, paged: int) -> tuple[str, dict]:
     return common["ajax_url"], form
 
 
-def extract(today: date) -> list[dict]:
+def extract(today: date) -> list[Event]:
     first = fetch_raw(SOURCE, PROGRAM_URL, today)
     events = parse(first)
     more, paged = next_enabled(first), 2
