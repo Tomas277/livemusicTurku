@@ -134,3 +134,18 @@ h2 { font-family: var(--serif); font-weight: 500; font-size: clamp(1.6rem, 4vw, 
 .ev { padding-right: 58px; }
 .ics { position: absolute; top: 50%; right: 12px; transform: translateY(-50%); z-index: 1; display: grid; place-items: center; width: 32px; height: 32px; padding: 0; border: 0; border-radius: 8px; background: none; color: var(--muted); }
 .ics:hover, .ics:focus-visible { color: var(--vc); background: color-mix(in srgb, var(--vc) 13%, transparent); }
+
+/* Entry: free, tickets, and how many are left */
+.status { margin: 7px 0 0; display: inline-flex; align-items: center; gap: 6px; font-size: .78rem; font-weight: 600; letter-spacing: .01em; padding: 2px 10px 2px 8px; border-radius: 999px; background: var(--soft); color: var(--muted); }
+.status::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+.status.free, .status.available { color: #1b7a4b; background: color-mix(in srgb, #1b7a4b 13%, var(--surface)); }
+.status.few { color: #a35f00; background: color-mix(in srgb, #e69a1b 20%, var(--surface)); }
+.status.sold_out { color: #b3261e; background: color-mix(in srgb, #d93025 13%, var(--surface)); }
+.status.plain::before { display: none; }
+.status.plain { padding-left: 10px; }
+@media (prefers-color-scheme: dark) {
+  .status.free, .status.available { color: #5fd49a; }
+  .status.few { color: #f0b34a; }
+  .status.sold_out { color: #ff8a80; }
+}
+.ev.sold-out .ev-body h3, .ev.sold-out .ev-date { opacity: .55; }

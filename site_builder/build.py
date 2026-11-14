@@ -19,7 +19,7 @@ VENUE_COLORS = ["#e4452b", "#2f7de1", "#1f9d6c", "#c98a0b", "#8e55d6",
 
 
 def read_events(con) -> list[dict]:
-    cur = con.execute("SELECT venue, title, date, doors, start, age_limit, url "
+    cur = con.execute("SELECT venue, title, date, doors, start, age_limit, url, access, availability "
                       "FROM marts.upcoming_events")
     cols = [c[0] for c in cur.description]
     return [dict(zip(cols, row)) for row in cur.fetchall()]

@@ -14,7 +14,9 @@ SELECT
     doors,
     start,
     age_limit,
-    url
+    url,
+    access,
+    availability
 FROM staging.events_raw r
 WHERE scraped_on = DATE '{{today}}'
   AND NOT EXISTS (

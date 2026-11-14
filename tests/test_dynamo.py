@@ -29,3 +29,11 @@ def test_olga_details():
     assert olga["start"] == "19:00"
     assert olga["age_limit"] == 18
     assert olga["url"] == "https://www.dynamoklubi.com/?page_id=17854"
+
+
+def test_entry_info_from_the_description():
+    by_title = {e["title"]: e for e in events()}
+    assert by_title["YTK + guests"]["access"] == "free"
+    assert by_title["Olga"]["availability"] == "sold_out"
+    # Two floors with different terms: don't claim "free" for the whole night.
+    assert by_title["Off the Rip vol. 8"]["access"] is None

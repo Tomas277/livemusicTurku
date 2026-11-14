@@ -40,6 +40,10 @@ def parse(data: dict, today: date) -> list[dict]:
         day = infer_date(int(d["eventDateDayNum"]), month, today, str(d.get("eventDateDay", "")).lower() or None)
         room = _text((d.get("eventVenue") or [""])[0])
         start = re.match(r"\d{1,2}:\d{2}", d.get("eventTime") or "")
+        # The site colours each concert's ticket status; it is the only venue that tells us how many are left.
+        status = str(d.get("capacityStatus") or "").lower()
+        availability = {"red": "sold_out", "yellow": "few", "green": "available"}.get(status)
+        has_tickets = availability is not None or bool(d.get("buyLink") or d.get("showBuyLink"))
         events.append({
             "source": SOURCE,
             "venue": VENUE if room.lower() in FUUGA_ROOMS or not room else room,
@@ -48,6 +52,8 @@ def parse(data: dict, today: date) -> list[dict]:
             "doors": None,
             "start": f"{int(start.group().split(':')[0]):02d}:{start.group().split(':')[1]}" if start else None,
             "age_limit": None,
+            "access": "tickets" if has_tickets else None,
+            "availability": availability,
             "url": d["url"],
         })
     return events

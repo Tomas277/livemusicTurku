@@ -3,6 +3,7 @@ from datetime import date
 
 from bs4 import BeautifulSoup
 
+from pipeline.access import classify
 from pipeline.dates import find_time, infer_date
 
 SOURCE = "kuka"
@@ -27,6 +28,7 @@ def parse(html: str, today: date) -> list[dict]:
             continue
         excerpt = ev.select_one("p.eventexcerpt")
         link = ev.select_one("a.newsreadmore")
+        access, availability = classify(_clean(f"{title_el.get_text()} {excerpt.get_text() if excerpt else ''}"))
         events.append({
             "source": SOURCE,
             "venue": VENUE,
@@ -35,6 +37,8 @@ def parse(html: str, today: date) -> list[dict]:
             "doors": None,
             "start": find_time(r"(?:klo|alkaen)", _clean(excerpt.get_text())) if excerpt else None,
             "age_limit": None,
+            "access": access,
+            "availability": availability,
             "url": link["href"] if link else PROGRAM_URL,
         })
     return events

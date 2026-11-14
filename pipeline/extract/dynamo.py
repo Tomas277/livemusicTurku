@@ -3,6 +3,7 @@ from datetime import date
 
 from bs4 import BeautifulSoup
 
+from pipeline.access import classify
 from pipeline.dates import find_time, infer_date
 
 SOURCE = "dynamo"
@@ -26,6 +27,10 @@ def parse(html: str, today: date) -> list[dict]:
             continue
         text = excerpt.get_text(" ", strip=True)
         age = re.search(r"\bK-?(\d{1,2})\b", text)
+        links = " ".join(a.get("href", "") for a in excerpt.select("a"))  # ticket shop links hide in hrefs
+        access, availability = classify(f"{text} {links}")
+        if access == "free" and "UP:" in text and "DOWN:" in text:
+            access = None  # two floors with their own entry terms: "free" may only hold for one of them
         link = re.search(r'navigateToURL\("([^"]+)"', block.get("onclick", ""))
         events.append({
             "source": SOURCE,
@@ -36,6 +41,8 @@ def parse(html: str, today: date) -> list[dict]:
             "doors": find_time(r"ovet\s*klo", text),
             "start": find_time(r"live\s*klo", text),
             "age_limit": int(age.group(1)) if age else None,
+            "access": access,
+            "availability": availability,
             "url": BASE_URL + link.group(1) if link else PROGRAM_URL,
         })
     return events

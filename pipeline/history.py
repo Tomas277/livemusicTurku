@@ -10,7 +10,7 @@ import duckdb
 COLUMNS = {
     "source": "VARCHAR", "venue": "VARCHAR", "title": "VARCHAR", "date": "DATE",
     "doors": "VARCHAR", "start": "VARCHAR", "age_limit": "INTEGER", "url": "VARCHAR",
-    "first_seen": "DATE", "last_seen": "DATE",
+    "access": "VARCHAR", "availability": "VARCHAR", "first_seen": "DATE", "last_seen": "DATE",
 }
 
 
@@ -22,9 +22,12 @@ def restore(con: duckdb.DuckDBPyConnection, path: Path) -> None:
     """Load history.events_history from the CSV, or start empty on the very first run."""
     con.execute("CREATE SCHEMA IF NOT EXISTS history")
     if path.exists():
-        cols = ", ".join(f"'{k}': '{v}'" for k, v in COLUMNS.items())
+        # Older history files were written before some columns existed; fill those with NULL.
+        present = path.read_text(encoding="utf-8").split("\n", 1)[0].strip().split(",")
+        cols = ", ".join(f"'{k}': '{COLUMNS[k]}'" for k in present)
+        select = ", ".join(k if k in present else f"NULL::{v} AS {k}" for k, v in COLUMNS.items())
         con.execute("CREATE OR REPLACE TABLE history.events_history AS "
-                    f"SELECT * FROM read_csv('{_sql_path(path)}', header = true, columns = {{{cols}}})")
+                    f"SELECT {select} FROM read_csv('{_sql_path(path)}', header = true, columns = {{{cols}}})")
     else:
         cols = ", ".join(f"{k} {v}" for k, v in COLUMNS.items())
         con.execute(f"CREATE OR REPLACE TABLE history.events_history ({cols})")

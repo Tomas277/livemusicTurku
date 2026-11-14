@@ -5,6 +5,7 @@ from datetime import date
 import httpx
 from bs4 import BeautifulSoup
 
+from pipeline.access import classify
 from pipeline.dates import find_time
 
 SOURCE = "logomo"
@@ -32,14 +33,21 @@ def parse_event(html: str, url: str, today: date) -> dict | None:
     if day < today:  # the sitemap still lists events back to 2022
         return None
     age = re.search(r"Ikäraja:\s*(\S+)", meta)
+    title = " ".join(title_el.get_text(" ").split())
+    shop = meta_el.select_one("a[href*='livex'], a[href*='lippu.fi'], a[href*='ticketmaster']")
+    access, availability = classify(f"{title} {meta}", ticket_link=shop is not None)
+    # "*LOPPUUNMYYTY*" is part of the title on their site; keep it out of the name so the gig keeps one identity.
+    title = re.sub(r"\s*[/*–-]*\s*\*?loppuunmyyty\*?\s*[/*]*", "", title, flags=re.I).strip(" /–-")
     return {
         "source": SOURCE,
         "venue": VENUE,
-        "title": " ".join(title_el.get_text(" ").split()),
+        "title": title,
         "date": day.isoformat(),
         "doors": None,
         "start": find_time(r"Tapahtuma alkaa:", meta),
         "age_limit": age.group(1) if age else None,
+        "access": access,
+        "availability": availability,
         "url": url,
     }
 

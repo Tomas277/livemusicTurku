@@ -52,3 +52,11 @@ def test_same_concert_listed_by_two_organizers_is_shown_once():
 
 def test_same_title_at_different_times_is_kept():
     assert len(fuuga.dedupe([_ev("Muumit", "14:00"), _ev("Muumit", "17:00")])) == 2
+
+
+def test_ticket_availability_comes_from_the_status_colours():
+    by_title = {e["title"]: e for e in events()}
+    assert by_title["TFO: Avajaiskonsertti"]["availability"] == "sold_out"
+    assert by_title["Muumit Pyrstötähteä etsimässä"]["availability"] == "few"
+    assert by_title["Viktoria Tolstoy & Jacob Karlzon – Who We Are"]["availability"] == "available"
+    assert {e["access"] for e in events()} == {"tickets"}

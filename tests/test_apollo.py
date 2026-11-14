@@ -19,3 +19,8 @@ def test_two_night_party_band_becomes_two_events():
     gen_y = sorted(e["date"] for e in evs if e["title"] == "Generation Y (SWE)")
     assert gen_y == ["2026-11-13", "2026-11-14"]
     assert all(e["url"].startswith("https://apolloturku.fi/bilebandi/") for e in evs)
+
+
+def test_every_gig_with_a_shop_button_needs_tickets():
+    evs = apollo.parse(fixture("apollo.html"), TODAY)
+    assert evs and {e["access"] for e in evs} == {"tickets"}

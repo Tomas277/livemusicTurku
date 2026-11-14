@@ -31,3 +31,16 @@ def test_page_without_event_details_is_skipped():
 def test_sitemap_urls():
     urls = logomo.event_urls(fixture("logomo_sitemap.xml"))
     assert len(urls) == 5 and all(u.startswith("https://logomo.fi/tapahtuma/") for u in urls)
+
+
+def test_ticket_shop_link_means_tickets():
+    ev = logomo.parse_event(fixture("logomo_event.html"), URL, TODAY)
+    assert ev["access"] == "tickets" and ev["availability"] is None
+
+
+def test_sold_out_marker_is_kept_out_of_the_title():
+    html = fixture("logomo_event.html").replace("ANSSI KELA – NUMMELA 25-VUOTISJUHLAKONSERTTIKIERTUE",
+                                               "ANSSI KELA – NUMMELA 25-VUOTISJUHLAKONSERTTIKIERTUE *LOPPUUNMYYTY*")
+    ev = logomo.parse_event(html, URL, TODAY)
+    assert ev["availability"] == "sold_out"
+    assert ev["title"] == "ANSSI KELA – NUMMELA 25-VUOTISJUHLAKONSERTTIKIERTUE"

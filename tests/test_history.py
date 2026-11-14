@@ -1,4 +1,5 @@
 from datetime import date, timedelta
+from pathlib import Path
 
 import duckdb
 
@@ -12,7 +13,8 @@ D2 = D1 + timedelta(days=1)
 
 def ev(title, day="2026-12-01", source="dynamo", venue="Dynamo"):
     return {"source": source, "venue": venue, "title": title, "date": day,
-            "doors": "20:00", "start": None, "age_limit": 18, "url": f"https://x/{title}"}
+            "doors": "20:00", "start": None, "age_limit": 18, "url": f"https://x/{title}",
+            "access": "tickets", "availability": "few"}
 
 
 def run_day(con, today, events_by_source):
@@ -33,10 +35,7 @@ def rows(con):
 
 def new_con():
     con = duckdb.connect()
-    con.execute("CREATE SCHEMA history")
-    con.execute("CREATE TABLE history.events_history (source VARCHAR, venue VARCHAR, title VARCHAR, "
-                "date DATE, doors VARCHAR, start VARCHAR, age_limit INTEGER, url VARCHAR, "
-                "first_seen DATE, last_seen DATE)")
+    history.restore(con, Path("does-not-exist.csv"))  # creates the empty history table
     return con
 
 
@@ -88,7 +87,7 @@ def test_csv_round_trip(tmp_path):
 
     other = duckdb.connect()
     history.restore(other, path)
-    cols = "source, venue, title, date, doors, start, age_limit, url, first_seen, last_seen"
+    cols = "source, venue, title, date, doors, start, age_limit, url, access, availability, first_seen, last_seen"
     q = f"SELECT {cols} FROM history.events_history ORDER BY title"
     assert other.execute(q).fetchall() == con.execute(q).fetchall()
     assert other.execute("SELECT typeof(doors), typeof(date) FROM history.events_history LIMIT 1").fetchone() \
@@ -106,3 +105,20 @@ def test_previous_upcoming_count():
     run_day(con, D1, {"dynamo": [ev("A"), ev("B"), ev("Old", day="2026-11-01")]})
     assert history.previous_upcoming_count(con, "dynamo", D1) == 2   # the past gig doesn't count
     assert history.previous_upcoming_count(con, "kuka", D1) == 0
+
+
+def test_restore_reads_a_history_file_from_before_access_columns_existed(tmp_path):
+    path = tmp_path / "old.csv"
+    path.write_text("source,venue,title,date,doors,start,age_limit,url,first_seen,last_seen\n"
+                    "kuka,Kuka,Old gig,2026-12-01,,21:00,,https://x,2026-11-13,2026-11-13\n", encoding="utf-8")
+    con = duckdb.connect()
+    history.restore(con, path)
+    assert con.execute("SELECT title, access, availability FROM history.events_history").fetchall() \
+        == [("Old gig", None, None)]
+
+
+def test_access_and_availability_reach_the_site_and_update_on_rescrape():
+    con = new_con()
+    run_day(con, D1, {"dynamo": [ev("A")]})
+    run_day(con, D2, {"dynamo": [dict(ev("A"), availability="sold_out")]})
+    assert con.execute("SELECT access, availability FROM marts.upcoming_events").fetchall() == [("tickets", "sold_out")]

@@ -4,6 +4,7 @@ from urllib.parse import urljoin
 
 from bs4 import BeautifulSoup
 
+from pipeline.access import classify
 from pipeline.dates import infer_date
 
 SOURCE = "apollo"
@@ -24,6 +25,8 @@ def parse(html: str, today: date, page_url: str = PAGES["keikat"]) -> list[dict]
             continue
         days = re.findall(r"([A-Za-zÄÖäö]{2})\s+(\d{1,2})\.(\d{1,2})\.", " ".join(date_el.get_text().split()))
         link = ev.select_one(".bandevents__event--cta a")
+        buy = ev.select_one(".bandevents__event--cta a.buy")  # the ticket shop button
+        access, availability = classify(buy.get_text(" ", strip=True) if buy else "", ticket_link=buy is not None)
         for weekday, day, month in days:
             events.append({
                 "source": SOURCE,
@@ -33,6 +36,8 @@ def parse(html: str, today: date, page_url: str = PAGES["keikat"]) -> list[dict]
                 "doors": None,
                 "start": None,
                 "age_limit": None,
+                "access": access,
+                "availability": availability,
                 "url": urljoin(BASE_URL, link["href"]) if link and link.get("href") else page_url,
             })
     return events

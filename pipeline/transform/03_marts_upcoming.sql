@@ -8,7 +8,8 @@ CREATE OR REPLACE TABLE marts.upcoming_events AS
 WITH latest AS (
     SELECT source, max(last_seen) AS last_ok FROM history.events_history GROUP BY source
 )
-SELECT h.venue, h.title, h.date, h.doors, h.start, h.age_limit, h.url
+SELECT h.venue, h.title, h.date, h.doors, h.start, h.age_limit, h.url,
+       h.access, h.availability
 FROM history.events_history h
 JOIN latest l ON l.source = h.source
 WHERE h.last_seen = l.last_ok
