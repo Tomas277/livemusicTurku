@@ -8,7 +8,7 @@ import duckdb
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
 from pipeline import history
-from pipeline.run import TRANSFORM_DIR, run_sql
+from pipeline.sql import TRANSFORM_DIR, run_sql
 from site_builder.i18n import (MONTHS_NOMINATIVE, MONTHS_SHORT, STRINGS, WEEKDAYS, WEEKDAYS_SHORT,
                                format_age, format_day, format_month)
 

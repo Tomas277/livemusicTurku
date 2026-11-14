@@ -7,7 +7,7 @@ import duckdb
 from pipeline import history
 from pipeline.event import Event
 from pipeline.load import load
-from pipeline.run import transform
+from pipeline.sql import transform
 
 D1 = date(2026, 11, 13)
 D2 = D1 + timedelta(days=1)

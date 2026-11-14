@@ -66,7 +66,7 @@ def test_main_builds_from_the_history_csv_alone(tmp_path, monkeypatch):
     con = empty_con()
     load(con, "dynamo", [Event(source="dynamo", venue="Dynamo", title="Future gig",
                                date=(today + timedelta(days=5)).isoformat(), url="u")], today)
-    from pipeline.run import transform
+    from pipeline.sql import transform
     transform(con, today)
     history.save(con, tmp_path / "history.csv")
 

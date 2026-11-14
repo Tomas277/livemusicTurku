@@ -8,7 +8,7 @@ from conftest import empty_con
 from pipeline.event import Event
 from pipeline.extract import dynamo
 from pipeline.load import load
-from pipeline.run import transform
+from pipeline.sql import transform
 
 HTML = (Path(__file__).parent / "fixtures" / "dynamo.html").read_text(encoding="utf-8")
 TODAY = date(2026, 11, 13)
