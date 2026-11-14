@@ -39,3 +39,16 @@ def test_talk_shows_and_ballet_are_dropped_and_other_venues_keep_their_name():
 
 def test_empty_page_means_the_end():
     assert events("fuuga_end.json") == []
+
+
+def _ev(title, start="14:00"):
+    return {"venue": "Fuuga", "title": title, "date": "2026-11-14", "start": start, "url": "u"}
+
+
+def test_same_concert_listed_by_two_organizers_is_shown_once():
+    out = fuuga.dedupe([_ev("Avajaiskonsertti"), _ev("TFO: Avajaiskonsertti")])
+    assert [e["title"] for e in out] == ["TFO: Avajaiskonsertti"]
+
+
+def test_same_title_at_different_times_is_kept():
+    assert len(fuuga.dedupe([_ev("Muumit", "14:00"), _ev("Muumit", "17:00")])) == 2

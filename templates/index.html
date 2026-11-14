@@ -51,20 +51,21 @@
         <h2>{{ m.label }}</h2>
         <div class="grid">
           {% for e in m.events %}
-          <a class="ev" href="{{ e.url }}" rel="noopener" data-date="{{ e.date.isoformat() }}" data-venue="{{ e.venue }}" style="--vc: {{ e.color }}">
+          <article class="ev" data-date="{{ e.date.isoformat() }}" data-venue="{{ e.venue }}" data-title="{{ e.title }}" data-start="{{ e.start or '' }}" data-doors="{{ e.doors or '' }}" data-url="{{ e.url }}" style="--vc: {{ e.color }}">
             <time class="ev-date" datetime="{{ e.date.isoformat() }}">
               <span class="dow">{{ e.dow }}</span><span class="day">{{ e.date.day }}</span><span class="mon">{{ e.mon }}</span>
             </time>
             <div class="ev-body">
-              <h3>{{ e.title }}</h3>
+              <h3><a class="ev-link" href="{{ e.url }}" rel="noopener">{{ e.title }}</a></h3>
               <p class="sub"><span class="venue"><i></i>{{ e.venue }}</span>
                 {%- if e.doors %}<span>{{ t.doors }} {{ e.doors }}</span>{% endif -%}
                 {%- if e.start %}<span>{{ t.start }} {{ e.start }}</span>{% endif -%}
                 {%- if e.age %}<span class="age">{{ e.age }}</span>{% endif -%}
               </p>
-            </div>
+              </div>
+            <button type="button" class="ics" title="{{ t.add_cal }}" aria-label="{{ t.add_cal }}: {{ e.title }}"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4M12 13.2v4.6M9.7 15.5h4.6"/></svg></button>
             <span class="go" aria-hidden="true">&rarr;</span>
-          </a>
+          </article>
           {% endfor %}
         </div>
       </section>

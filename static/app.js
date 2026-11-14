@@ -136,6 +136,38 @@
     return null;
   }
 
+  /* ---- Add to calendar (.ics) ---- */
+  const icsText = (v) => v.replace(/[\\;,]/g, "\\$&").replace(/\n/g, "\\n");
+  const icsFold = (line) => line.match(/.{1,70}/gu).join("\r\n ");
+  function downloadIcs(c) {
+    const d = c.dataset, day = d.date.replace(/-/g, "");
+    const time = d.start || d.doors;
+    const stamp = new Date().toISOString().replace(/[-:]|\.\d+/g, "");
+    let when;
+    if (time) {
+      const [h, m] = time.split(":").map(Number);
+      const end = new Date(2000, 0, 1, h + 2, m);   // gig lengths are not published: assume two hours
+      const hhmm = (hh, mm) => `${String(hh).padStart(2, "0")}${String(mm).padStart(2, "0")}00`;
+      const endDay = end.getDate() === 1 ? day : iso(addDays(parse(d.date), 1)).replace(/-/g, "");
+      when = [`DTSTART:${day}T${hhmm(h, m)}`, `DTEND:${endDay}T${hhmm(end.getHours(), end.getMinutes())}`];
+    } else {
+      when = [`DTSTART;VALUE=DATE:${day}`, `DTEND;VALUE=DATE:${iso(addDays(parse(d.date), 1)).replace(/-/g, "")}`];
+    }
+    const lines = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//livemusicTurku//EN", "BEGIN:VEVENT",
+      `UID:${day}-${encodeURIComponent(d.url)}@livemusicturku`, `DTSTAMP:${stamp}`, ...when,
+      `SUMMARY:${icsText(d.title)}`, `LOCATION:${icsText(`${d.venue}, Turku`)}`, `URL:${d.url}`,
+      `DESCRIPTION:${icsText(d.doors ? `${T.doors} ${d.doors}\n${d.url}` : d.url)}`, "END:VEVENT", "END:VCALENDAR"];
+    const a = el("a");
+    a.href = URL.createObjectURL(new Blob([lines.map(icsFold).join("\r\n") + "\r\n"], { type: "text/calendar" }));
+    a.download = "gig.ics";
+    a.click();
+    URL.revokeObjectURL(a.href);
+  }
+  document.addEventListener("click", (e) => {
+    const b = e.target.closest(".ics");
+    if (b) downloadIcs(b.closest(".ev"));
+  });
+
   /* ---- Orchestration ---- */
   function render() {
     for (const [name, node] of Object.entries(views)) node.hidden = name !== state.view;

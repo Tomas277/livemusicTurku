@@ -53,6 +53,22 @@ def parse(data: dict, today: date) -> list[dict]:
     return events
 
 
+def _match_key(e: dict) -> tuple:
+    # The orchestra lists the same concert without the "TFO: " style prefix the house uses.
+    title = re.sub(r"^[A-ZÅÄÖ0-9]{2,6}:\s*", "", e["title"]).lower()
+    return e["venue"], e["date"], e["start"], title
+
+
+def dedupe(events: list[dict]) -> list[dict]:
+    """One event per concert; of two twins keep the one with the longer (more informative) title."""
+    best: dict[tuple, dict] = {}
+    for e in events:
+        k = _match_key(e)
+        if k not in best or len(e["title"]) > len(best[k]["title"]):
+            best[k] = e
+    return list(best.values())
+
+
 def extract(today: date) -> list[dict]:
     from pipeline.fetch import HEADERS, save_raw
     events = []
@@ -66,4 +82,4 @@ def extract(today: date) -> list[dict]:
         if not data.get("contentList"):  # past the last page the list is simply empty
             break
         events.extend(parse(data, today))
-    return events
+    return dedupe(events)

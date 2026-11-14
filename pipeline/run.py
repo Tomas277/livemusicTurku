@@ -32,7 +32,11 @@ def main() -> None:
     history.restore(con, HISTORY_CSV)
 
     failed = []
+    # Set LIVEMUSIC_SOURCES=fuuga,kuka to scrape only some sources locally (the rest keep their history).
+    only = {n for n in os.environ.get("LIVEMUSIC_SOURCES", "").split(",") if n}
     for name, module in SOURCES.items():
+        if only and name not in only:
+            continue
         try:
             events = module.extract(today)
         except Exception as exc:  # one broken scraper must not stop the others
