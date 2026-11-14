@@ -7,6 +7,7 @@ from bs4 import BeautifulSoup
 from pipeline.access import classify
 from pipeline.dates import infer_date
 from pipeline.event import Event
+from pipeline.fetch import fetch_raw
 
 SOURCE = "apollo"
 VENUE = "Apollo"
@@ -42,7 +43,6 @@ def parse(html: str, today: date, page_url: str = PAGES["keikat"]) -> list[Event
 
 
 def extract(today: date) -> list[Event]:
-    from pipeline.fetch import fetch_raw
     events = []
     for name, url in PAGES.items():
         events += parse(fetch_raw(SOURCE, url, today, name), today, url)

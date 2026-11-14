@@ -6,6 +6,7 @@ from bs4 import BeautifulSoup
 from pipeline.access import classify
 from pipeline.dates import find_time, infer_date
 from pipeline.event import Event
+from pipeline.fetch import fetch_raw
 
 SOURCE = "dynamo"
 VENUE = "Dynamo"
@@ -50,5 +51,4 @@ def parse(html: str, today: date) -> list[Event]:
 
 
 def extract(today: date) -> list[Event]:
-    from pipeline.fetch import fetch_raw
     return parse(fetch_raw(SOURCE, PROGRAM_URL, today), today)

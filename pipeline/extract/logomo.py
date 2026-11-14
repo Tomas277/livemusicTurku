@@ -1,4 +1,5 @@
 import re
+import sys
 import time
 from datetime import date
 
@@ -8,6 +9,7 @@ from bs4 import BeautifulSoup
 from pipeline.access import classify
 from pipeline.dates import find_time
 from pipeline.event import Event
+from pipeline.fetch import fetch_raw, get
 
 SOURCE = "logomo"
 VENUE = "Logomo"
@@ -53,15 +55,18 @@ def parse_event(html: str, url: str, today: date) -> Event | None:
 
 
 def extract(today: date) -> list[Event]:
-    from pipeline.fetch import HEADERS, fetch_raw
-    sitemap = httpx.get(SITEMAP_URL, headers=HEADERS, follow_redirects=True, timeout=30)
-    sitemap.raise_for_status()
+    sitemap = get(SITEMAP_URL)
     events = []
     # Logomo's event list is an Ajax Load More widget that can't be queried reliably,
     # so read every event page from the sitemap (one polite request at a time).
     for url in event_urls(sitemap.text):
         name = url.rstrip("/").rsplit("/", 1)[-1]
-        event = parse_event(fetch_raw(SOURCE, url, today, name), url, today)
+        try:
+            html = fetch_raw(SOURCE, url, today, name)
+        except httpx.HTTPError as exc:  # one bad page must not cost the whole source; the count check still guards
+            print(f"logomo: skipped {url} - {type(exc).__name__}: {exc}", file=sys.stderr)
+            continue
+        event = parse_event(html, url, today)
         if event:
             events.append(event)
         time.sleep(0.3)

@@ -2,11 +2,10 @@ import json
 import re
 from datetime import date
 
-import httpx
 from bs4 import BeautifulSoup
 
 from pipeline.event import Event
-from pipeline.fetch import HEADERS, fetch_raw, save_raw
+from pipeline.fetch import fetch_raw, post, save_raw
 
 SOURCE = "fuusio"
 VENUE = "Fuusio"
@@ -85,8 +84,7 @@ def extract(today: date) -> list[Event]:
     more, paged = next_enabled(first), 2
     while more and paged <= MAX_PAGES:
         url, form = next_page_request(first, paged)
-        resp = httpx.post(url, data=form, headers=HEADERS, timeout=30)
-        resp.raise_for_status()
+        resp = post(url, data=form)
         body = resp.json()
         if not body.get("success"):
             raise RuntimeError(f"Fuusio page {paged}: unexpected response {resp.text[:200]}")

@@ -2,10 +2,9 @@ import html
 import re
 from datetime import date
 
-import httpx
-
 from pipeline.dates import infer_date
 from pipeline.event import Event
+from pipeline.fetch import post, save_raw
 
 SOURCE = "fuuga"
 VENUE = "Fuuga"
@@ -74,13 +73,11 @@ def dedupe(events: list[Event]) -> list[Event]:
 
 
 def extract(today: date) -> list[Event]:
-    from pipeline.fetch import HEADERS, save_raw
     events = []
     for page in range(1, MAX_PAGES + 1):
         body = {"page": page, "search_key": "", "filters": {}, "post_types": "event", "show_only_terms": "",
                 "dynamic_filters": "", "filter_options": "", "lang": "fi", "meta": {}}
-        resp = httpx.post(API_URL, json=body, headers=HEADERS, timeout=30)
-        resp.raise_for_status()
+        resp = post(API_URL, json=body)
         save_raw(SOURCE, today, f"page{page}", resp.text)
         data = resp.json()
         if not data.get("contentList"):  # past the last page the list is simply empty
