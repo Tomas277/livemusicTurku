@@ -16,7 +16,7 @@ class Event:
     url: str
     doors: str | None = None        # "HH:MM"
     start: str | None = None        # "HH:MM"
-    age_limit: int | str | None = None
+    age_limit: int | None = None
     access: str | None = None       # "tickets", "free", or None when the venue doesn't say
     availability: str | None = None  # "sold_out", "few", "available", or None
 

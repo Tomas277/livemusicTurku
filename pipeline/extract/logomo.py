@@ -33,7 +33,7 @@ def parse_event(html: str, url: str, today: date) -> dict | None:
     day = date(int(m.group(3)), int(m.group(2)), int(m.group(1)))
     if day < today:  # the sitemap still lists events back to 2022
         return None
-    age = re.search(r"Ikäraja:\s*(\S+)", meta)
+    age = re.search(r"Ikäraja:\s*K-?(\d{1,2})\b", meta)  # "Ikärajaton" has no colon and stays None
     title = " ".join(title_el.get_text(" ").split())
     shop = meta_el.select_one("a[href*='livex'], a[href*='lippu.fi'], a[href*='ticketmaster']")
     access, availability = classify(f"{title} {meta}", ticket_link=shop is not None)
@@ -45,7 +45,7 @@ def parse_event(html: str, url: str, today: date) -> dict | None:
         title=title,
         date=day.isoformat(),
         start=find_time(r"Tapahtuma alkaa:", meta),
-        age_limit=age.group(1) if age else None,
+        age_limit=int(age.group(1)) if age else None,
         access=access,
         availability=availability,
         url=url,
