@@ -1,13 +1,8 @@
 -- Merge today's scrape into the history. One row per gig; we remember when it was
 -- first and last seen. Gigs that vanish from a venue's site are kept, with an old
 -- last_seen, so cancellations stay visible. Sources not scraped today are untouched.
+-- history.events_history is created by history.restore() before this runs.
 CREATE SCHEMA IF NOT EXISTS history;
-
-CREATE TABLE IF NOT EXISTS history.events_history (
-    source VARCHAR, venue VARCHAR, title VARCHAR, date DATE,
-    doors VARCHAR, start VARCHAR, age_limit INTEGER, url VARCHAR,
-    access VARCHAR, availability VARCHAR, first_seen DATE, last_seen DATE
-);
 
 CREATE OR REPLACE TABLE history.events_history AS
 SELECT e.source, e.venue, e.title, e.date, e.doors, e.start, e.age_limit, e.url,

@@ -7,11 +7,7 @@ from pathlib import Path
 
 import duckdb
 
-COLUMNS = {
-    "source": "VARCHAR", "venue": "VARCHAR", "title": "VARCHAR", "date": "DATE",
-    "doors": "VARCHAR", "start": "VARCHAR", "age_limit": "INTEGER", "url": "VARCHAR",
-    "access": "VARCHAR", "availability": "VARCHAR", "first_seen": "DATE", "last_seen": "DATE",
-}
+from pipeline.event import HISTORY_TYPES as COLUMNS
 
 
 def _sql_path(path: Path) -> str:
@@ -36,7 +32,7 @@ def restore(con: duckdb.DuckDBPyConnection, path: Path) -> None:
 def save(con: duckdb.DuckDBPyConnection, path: Path) -> None:
     """Write the history back, in a fixed order so git diffs only show real changes."""
     path.parent.mkdir(parents=True, exist_ok=True)
-    con.execute("COPY (SELECT * FROM history.events_history "
+    con.execute(f"COPY (SELECT {', '.join(COLUMNS)} FROM history.events_history "
                 "ORDER BY date, source, title, first_seen) "
                 f"TO '{_sql_path(path)}' (HEADER, DELIMITER ',')")
 

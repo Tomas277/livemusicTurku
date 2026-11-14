@@ -2,7 +2,7 @@ from datetime import date
 
 import duckdb
 
-from pipeline.event import COLUMNS, OPTIONAL
+from pipeline.event import COLUMNS, OPTIONAL, SQL_TYPES
 
 
 def load(con: duckdb.DuckDBPyConnection, source: str, events: list[dict], today: date) -> None:
@@ -12,15 +12,10 @@ def load(con: duckdb.DuckDBPyConnection, source: str, events: list[dict], today:
     so the load is idempotent.
     """
     con.execute("CREATE SCHEMA IF NOT EXISTS staging")
-    con.execute("""
-        CREATE TABLE IF NOT EXISTS staging.events_raw (
-            source VARCHAR, venue VARCHAR, title VARCHAR, date DATE,
-            doors VARCHAR, start VARCHAR, age_limit INTEGER, url VARCHAR,
-            scraped_on DATE
-        )
-    """)
-    for col in ("access", "availability"):  # tables created by older versions of the pipeline lack these
-        con.execute(f"ALTER TABLE staging.events_raw ADD COLUMN IF NOT EXISTS {col} VARCHAR")
+    columns = {**SQL_TYPES, "scraped_on": "DATE"}
+    con.execute(f"CREATE TABLE IF NOT EXISTS staging.events_raw ({', '.join(f'{k} {v}' for k, v in columns.items())})")
+    for name, sql_type in columns.items():  # a table made by an older version of the pipeline may lack newer columns
+        con.execute(f"ALTER TABLE staging.events_raw ADD COLUMN IF NOT EXISTS {name} {sql_type}")
     con.execute("DELETE FROM staging.events_raw WHERE source = ? AND scraped_on = ?",
                 [source, today])
     cols = ", ".join([*COLUMNS, "scraped_on"])

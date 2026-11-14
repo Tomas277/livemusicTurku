@@ -2,7 +2,8 @@
 
 Extractors build an Event, so a forgotten or misspelled field fails right where the mistake is.
 The rest of the pipeline passes events around as plain dicts (Event.as_dict()), and load.py
-derives its columns from this class, so a new field is added here and in the SQL only.
+derives its columns from this class. A new field is added in three places: the Event class,
+SQL_TYPES below, and the SELECT lists in pipeline/transform/*.sql.
 """
 from dataclasses import MISSING, asdict, dataclass, fields
 
@@ -26,3 +27,13 @@ class Event:
 
 COLUMNS = tuple(f.name for f in fields(Event))
 OPTIONAL = frozenset(f.name for f in fields(Event) if f.default is not MISSING)
+
+
+# DuckDB type of every Event field, in the order the history CSV stores them. The staging and
+# history tables are generated from this, so the types are defined once.
+SQL_TYPES = {
+    "source": "VARCHAR", "venue": "VARCHAR", "title": "VARCHAR", "date": "DATE",
+    "doors": "VARCHAR", "start": "VARCHAR", "age_limit": "INTEGER", "url": "VARCHAR",
+    "access": "VARCHAR", "availability": "VARCHAR",
+}
+HISTORY_TYPES = {**SQL_TYPES, "first_seen": "DATE", "last_seen": "DATE"}

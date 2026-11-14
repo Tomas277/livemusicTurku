@@ -4,6 +4,7 @@ from pathlib import Path
 
 import duckdb
 
+from conftest import empty_con
 from pipeline.extract import dynamo
 from pipeline.load import load
 from pipeline.run import transform
@@ -13,7 +14,7 @@ TODAY = date(2026, 11, 13)
 
 
 def build(today=TODAY):
-    con = duckdb.connect()
+    con = empty_con()
     events = dynamo.parse(HTML, TODAY)
     load(con, "dynamo", events, today)
     transform(con, today)
@@ -34,7 +35,7 @@ def test_load_is_idempotent():
 
 
 def test_duplicates_are_removed():
-    con = duckdb.connect()
+    con = empty_con()
     events = dynamo.parse(HTML, TODAY)
     load(con, "dynamo", events + events[:3], TODAY)  # 3 duplicate rows
     transform(con, TODAY)
@@ -43,7 +44,7 @@ def test_duplicates_are_removed():
 
 def test_non_music_events_are_filtered_out():
     from pipeline.extract import fuusio, kuka
-    con = duckdb.connect()
+    con = empty_con()
     load(con, "kuka", kuka.parse((Path(__file__).parent / "fixtures" / "kuka.html").read_text(encoding="utf-8"), TODAY), TODAY)
     load(con, "fuusio", fuusio.parse((Path(__file__).parent / "fixtures" / "fuusio.html").read_text(encoding="utf-8")), TODAY)
     transform(con, TODAY)
@@ -58,7 +59,7 @@ def test_runo_pattern_matches_only_at_word_start():
     def ev(title):
         return {"source": "t", "venue": "T", "title": title, "date": "2026-12-01",
                 "doors": None, "start": None, "age_limit": None, "url": "u"}
-    con = duckdb.connect()
+    con = empty_con()
     load(con, "t", [ev("Bruno Mars Tribute"), ev("Runoilta"), ev("Kuka Runoklubi")], TODAY)
     transform(con, TODAY)
     kept = {r[0] for r in con.execute("SELECT title FROM int.events").fetchall()}
