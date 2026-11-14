@@ -8,7 +8,7 @@ from pipeline import fetch
 from pipeline.extract import logomo
 
 
-def use_answers(monkeypatch, answers):
+def use_answers(monkeypatch, answers, headers=None):
     """Make fetch talk to a fake site that gives the listed answers (a status code or an exception) in order."""
     calls = []
 
@@ -17,7 +17,7 @@ def use_answers(monkeypatch, answers):
         answer = answers[min(len(calls), len(answers)) - 1]
         if isinstance(answer, Exception):
             raise answer
-        return httpx.Response(answer, text="ok")
+        return httpx.Response(answer, text="ok", headers=headers)
 
     monkeypatch.setattr(fetch, "client", httpx.Client(transport=httpx.MockTransport(handler)))
     monkeypatch.setattr(fetch, "RETRY_DELAYS", (0, 0))
@@ -60,3 +60,32 @@ def test_logomo_skips_one_failing_page(monkeypatch, capsys):
     events = logomo.extract(date(2026, 11, 14))
     assert len(events) == len(urls) - 1
     assert urls[0] in capsys.readouterr().err
+
+
+def test_too_many_requests_is_retried(monkeypatch):
+    calls = use_answers(monkeypatch, [429, 200])
+    assert fetch.get("https://x/").text == "ok"
+    assert len(calls) == 2
+
+
+def test_retry_after_is_honoured_but_capped(monkeypatch):
+    waits = []
+    monkeypatch.setattr(fetch.time, "sleep", waits.append)
+    use_answers(monkeypatch, [429, 429, 200], headers={"Retry-After": "7"})
+    monkeypatch.setattr(fetch, "RETRY_DELAYS", (1, 2))
+    fetch.get("https://x/")
+    assert waits == [7, 7]
+    waits.clear()
+    use_answers(monkeypatch, [503, 200], headers={"Retry-After": "99"})
+    monkeypatch.setattr(fetch, "RETRY_DELAYS", (1, 2))
+    fetch.get("https://x/")
+    assert waits == [30]
+
+
+def test_a_non_numeric_retry_after_falls_back_to_the_backoff(monkeypatch):
+    waits = []
+    monkeypatch.setattr(fetch.time, "sleep", waits.append)
+    use_answers(monkeypatch, [429, 200], headers={"Retry-After": "Wed, 21 Oct 2026 07:28:00 GMT"})
+    monkeypatch.setattr(fetch, "RETRY_DELAYS", (1, 2))
+    fetch.get("https://x/")
+    assert waits == [1]

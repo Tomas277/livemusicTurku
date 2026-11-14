@@ -20,18 +20,29 @@ client = httpx.Client(headers=HEADERS, follow_redirects=True, timeout=30)
 RETRY_DELAYS = (1, 2)  # seconds to wait before the 2nd and 3rd attempt
 
 
+MAX_RETRY_AFTER = 30   # never sleep longer than this because a server asked
+
+
+def _wait_time(resp: httpx.Response, delay: float) -> float:
+    """The backoff delay, or the server's own numeric Retry-After (capped) when it sent one."""
+    value = resp.headers.get("Retry-After", "")
+    return min(int(value), MAX_RETRY_AFTER) if value.isdigit() else delay
+
+
 def request(method: str, url: str, **kwargs) -> httpx.Response:
-    """One HTTP request. Network errors and 5xx answers are retried twice; 4xx fails at once."""
+    """One HTTP request. Network errors, 5xx and 429 answers are retried twice; other 4xx fail at once."""
     for delay in (*RETRY_DELAYS, None):
         try:
             resp = client.request(method, url, **kwargs)
-            if resp.status_code < 500 or delay is None:
+            if not (resp.status_code >= 500 or resp.status_code == 429) or delay is None:
                 resp.raise_for_status()
                 return resp
+            wait = _wait_time(resp, delay)
         except httpx.TransportError:
             if delay is None:
                 raise
-        time.sleep(delay)
+            wait = delay
+        time.sleep(wait)
 
 
 def get(url: str, **kwargs) -> httpx.Response:
