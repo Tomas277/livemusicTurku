@@ -14,12 +14,11 @@
   <header class="masthead">
     <div class="wrap">
       <div class="ears">
-        <span class="edition">{{ t.edition }}</span>
+        <span></span>
         <time class="dateline" id="dateline" datetime="{{ built_on }}">{{ dateline }}</time>
         <a class="lang" href="../{{ t.other_lang_code }}/" hreflang="{{ t.other_lang_code }}">{{ t.other_lang }}</a>
       </div>
       <h1 class="nameplate"><a href="./">{{ t.title }}</a></h1>
-      <p class="motto">{{ t.hero_text }}</p>
     </div>
   </header>
 
@@ -41,12 +40,10 @@
 
   <main class="wrap">
     <section id="view-week" class="view" role="tabpanel" aria-labelledby="tab-week" hidden>
-      <p class="intro">{{ t.week_intro }}</p>
       <div class="week-list"></div>
     </section>
 
     <section id="view-upcoming" class="view" role="tabpanel" aria-labelledby="tab-upcoming">
-      <p class="intro">{{ t.upcoming_intro }}</p>
       <div class="month-pills" hidden></div>
       {% for m in months %}
       <section class="month" data-month="{{ m.key }}">
@@ -75,7 +72,6 @@
     </section>
 
     <section id="view-calendar" class="view" role="tabpanel" aria-labelledby="tab-calendar" hidden>
-      <p class="intro">{{ t.calendar_intro }}</p>
       <div class="cal"></div>
       <div class="cal-day"></div>
     </section>
@@ -85,7 +81,6 @@
 
   <footer class="foot">
     <div class="wrap">
-      <p>{{ t.sources }} {{ venues | map(attribute="name") | join(", ") }}.</p>
       <p>{{ t.updated }} {{ built_on }}</p>
     </div>
   </footer>
