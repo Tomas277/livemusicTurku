@@ -93,3 +93,18 @@ def test_one_broken_source_does_not_stop_the_others(tmp_path, monkeypatch, capsy
     err = capsys.readouterr().err
     assert "raises: FAILED" in err and "bad: FAILED - ValueError" in err
     assert "Fine gig" in (tmp_path / "history.csv").read_text(encoding="utf-8")
+
+
+def test_a_failed_load_leaves_staging_as_it_was():
+    from pipeline.load import load
+    con = empty_con()
+
+    def gig(title):
+        return Event(source="t", venue="T", title=title, date="2026-12-01", url="u")
+
+    load(con, "t", [gig("First"), gig("Second")], TODAY)
+    broken = gig("Broken")
+    object.__setattr__(broken, "age_limit", "not a number")  # slips past Event's own check
+    with pytest.raises(Exception):
+        load(con, "t", [gig("Replacement"), broken], TODAY)  # same source and day: replaces the rows
+    assert sorted(r[0] for r in con.execute("SELECT title FROM staging.events_raw").fetchall()) == ["First", "Second"]
