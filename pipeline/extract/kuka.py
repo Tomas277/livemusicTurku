@@ -5,7 +5,7 @@ from bs4 import BeautifulSoup
 
 from pipeline.access import classify
 from pipeline.dates import find_time, infer_date
-from pipeline.event import Event
+from pipeline.event import Event, add_event
 from pipeline.fetch import fetch_raw
 
 SOURCE = "kuka"
@@ -31,7 +31,7 @@ def parse(html: str, today: date) -> list[Event]:
         excerpt = ev.select_one("p.eventexcerpt")
         link = ev.select_one("a.newsreadmore")
         access, availability = classify(_clean(f"{title_el.get_text()} {excerpt.get_text() if excerpt else ''}"))
-        events.append(Event(
+        add_event(events,
             source=SOURCE,
             venue=VENUE,
             title=_clean(title_el.get_text("")),
@@ -40,7 +40,7 @@ def parse(html: str, today: date) -> list[Event]:
             access=access,
             availability=availability,
             url=link["href"] if link else PROGRAM_URL,
-        ))
+        )
     return events
 
 

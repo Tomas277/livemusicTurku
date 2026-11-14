@@ -5,7 +5,7 @@ from bs4 import BeautifulSoup
 
 from pipeline.access import classify
 from pipeline.dates import find_time, infer_date
-from pipeline.event import Event
+from pipeline.event import Event, add_event
 from pipeline.fetch import fetch_raw
 
 SOURCE = "dynamo"
@@ -34,7 +34,7 @@ def parse(html: str, today: date) -> list[Event]:
         if access == "free" and "UP:" in text and "DOWN:" in text:
             access = None  # two floors with their own entry terms: "free" may only hold for one of them
         link = re.search(r'navigateToURL\("([^"]+)"', block.get("onclick", ""))
-        events.append(Event(
+        add_event(events,
             source=SOURCE,
             venue=VENUE,
             title=title_tag.get_text(" ", strip=True),
@@ -46,7 +46,7 @@ def parse(html: str, today: date) -> list[Event]:
             access=access,
             availability=availability,
             url=BASE_URL + link.group(1) if link else PROGRAM_URL,
-        ))
+        )
     return events
 
 

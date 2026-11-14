@@ -8,7 +8,7 @@ from bs4 import BeautifulSoup
 
 from pipeline.access import classify
 from pipeline.dates import find_time
-from pipeline.event import Event
+from pipeline.event import Event, make_event
 from pipeline.fetch import fetch_raw, get
 
 SOURCE = "logomo"
@@ -41,7 +41,7 @@ def parse_event(html: str, url: str, today: date) -> Event | None:
     access, availability = classify(f"{title} {meta}", ticket_link=shop is not None)
     # "*LOPPUUNMYYTY*" is part of the title on their site; keep it out of the name so the gig keeps one identity.
     title = re.sub(r"\s*[/*–-]*\s*\*?loppuunmyyty\*?\s*[/*]*", "", title, flags=re.I).strip(" /–-")
-    return Event(
+    return make_event(
         source=SOURCE,
         venue=VENUE,
         title=title,

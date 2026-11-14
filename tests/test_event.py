@@ -17,7 +17,7 @@ def test_optional_fields_default_to_none():
 
 
 def test_bad_values_fail_where_the_event_is_made():
-    for bad in ({"date": "2026-13-45"}, {"date": "14.11.2026"}, {"start": "7pm"}, {"doors": "9:00"},
+    for bad in ({"title": " "}, {"venue": ""}, {"url": ""}, {"date": "2026-13-45"}, {"date": "14.11.2026"}, {"start": "7pm"}, {"doors": "9:00"}, {"start": "29:00"}, {"doors": "12:61"},
                 {"age_limit": "K12"}, {"age_limit": True}, {"access": "paid"}, {"availability": "full"}):
         with pytest.raises(ValueError):
             make(**bad)
@@ -34,3 +34,13 @@ def test_a_misspelled_or_missing_field_fails_immediately():
 def test_every_event_field_has_a_database_type():
     assert set(SQL_TYPES) == set(COLUMNS)
     assert list(HISTORY_TYPES) == [*SQL_TYPES, "first_seen", "last_seen"]
+
+
+def test_make_event_skips_and_logs_a_bad_gig(capsys):
+    from pipeline.event import add_event, make_event
+    assert make_event(source="s", venue="v", title="Ok", date="2026-12-01", url="u").title == "Ok"
+    assert make_event(source="s", venue="v", title="", date="2026-12-01", url="https://x/e") is None
+    assert "s: skipped 'https://x/e' - title is empty" in capsys.readouterr().err
+    events = []
+    add_event(events, source="s", venue="v", title="Bad", date="nope", url="u")
+    assert events == [] and "skipped 'Bad'" in capsys.readouterr().err

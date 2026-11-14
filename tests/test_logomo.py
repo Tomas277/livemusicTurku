@@ -50,3 +50,24 @@ def test_age_limit_is_a_number():
     html = fixture("logomo_event.html").replace("Ikärajaton", "Ikäraja: K18 (anniskelualuetta)")
     assert logomo.parse_event(html, URL, TODAY).age_limit == 18
     assert logomo.parse_event(fixture("logomo_event.html"), URL, TODAY).age_limit is None
+
+
+def test_page_with_an_empty_or_sold_out_only_title_is_skipped(capsys):
+    html = fixture("logomo_event.html")
+    title = "ANSSI KELA – NUMMELA 25-VUOTISJUHLAKONSERTTIKIERTUE"
+    assert logomo.parse_event(html.replace(title, ""), URL, TODAY) is None
+    assert logomo.parse_event(html.replace(title, "*LOPPUUNMYYTY*"), URL, TODAY) is None
+    assert capsys.readouterr().err.count("logomo: skipped") == 2
+
+
+def test_one_bad_page_does_not_cost_the_other_events(monkeypatch, capsys):
+    import httpx
+    sitemap = fixture("logomo_sitemap.xml")
+    urls = logomo.event_urls(sitemap)
+    good = fixture("logomo_event.html")
+    bad = good.replace("ANSSI KELA – NUMMELA 25-VUOTISJUHLAKONSERTTIKIERTUE", "")
+    monkeypatch.setattr(logomo, "get", lambda url: httpx.Response(200, text=sitemap))
+    monkeypatch.setattr(logomo, "fetch_raw", lambda source, url, today, name="page": bad if url == urls[1] else good)
+    monkeypatch.setattr(logomo.time, "sleep", lambda s: None)
+    assert len(logomo.extract(TODAY)) == len(urls) - 1
+    assert urls[1] in capsys.readouterr().err

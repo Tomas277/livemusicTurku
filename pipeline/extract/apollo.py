@@ -6,7 +6,7 @@ from bs4 import BeautifulSoup
 
 from pipeline.access import classify
 from pipeline.dates import infer_date
-from pipeline.event import Event
+from pipeline.event import Event, add_event
 from pipeline.fetch import fetch_raw
 
 SOURCE = "apollo"
@@ -30,7 +30,7 @@ def parse(html: str, today: date, page_url: str = PAGES["keikat"]) -> list[Event
         buy = ev.select_one(".bandevents__event--cta a.buy")  # the ticket shop button
         access, availability = classify(buy.get_text(" ", strip=True) if buy else "", ticket_link=buy is not None)
         for weekday, day, month in days:
-            events.append(Event(
+            add_event(events,
                 source=SOURCE,
                 venue=VENUE,
                 title=" ".join(title_el.get_text().split()),
@@ -38,7 +38,7 @@ def parse(html: str, today: date, page_url: str = PAGES["keikat"]) -> list[Event
                 access=access,
                 availability=availability,
                 url=urljoin(BASE_URL, link["href"]) if link and link.get("href") else page_url,
-            ))
+            )
     return events
 
 

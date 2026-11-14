@@ -4,7 +4,7 @@ from datetime import date
 
 from bs4 import BeautifulSoup
 
-from pipeline.event import Event
+from pipeline.event import Event, add_event
 from pipeline.fetch import fetch_raw, post, save_raw
 
 SOURCE = "fuusio"
@@ -32,13 +32,13 @@ def parse(html: str) -> list[Event]:
         when = ev.select_one("time[datetime]")
         if not (link and when):
             continue
-        events.append(Event(
+        add_event(events,
             source=SOURCE,
             venue=VENUE,
             title=_clean_title(link.get_text()),
             date=when["datetime"][:10],
             url=link["href"],
-        ))
+        )
     return events
 
 

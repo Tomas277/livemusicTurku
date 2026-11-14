@@ -37,3 +37,11 @@ def test_entry_info_from_the_description():
     assert by_title["Olga"].availability == "sold_out"
     # Two floors with different terms: don't claim "free" for the whole night.
     assert by_title["Off the Rip vol. 8"].access is None
+
+
+def test_one_bad_card_does_not_cost_the_rest(capsys):
+    html = (Path(__file__).parent / "fixtures" / "dynamo.html").read_text(encoding="utf-8")
+    assert "Live klo 20:30" in html
+    broken = html.replace("Live klo 20:30", "Live klo 29:30", 1)  # 29:30 is not a time
+    assert len(dynamo.parse(broken, TODAY)) == len(dynamo.parse(html, TODAY)) - 1
+    assert "dynamo: skipped" in capsys.readouterr().err

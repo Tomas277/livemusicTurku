@@ -3,7 +3,7 @@ import re
 from datetime import date
 
 from pipeline.dates import infer_date, normalize_time
-from pipeline.event import Event
+from pipeline.event import Event, add_event
 from pipeline.fetch import post, save_raw
 
 SOURCE = "fuuga"
@@ -42,7 +42,7 @@ def parse(data: dict, today: date) -> list[Event]:
         status = str(d.get("capacityStatus") or "").lower()
         availability = {"red": "sold_out", "yellow": "few", "green": "available"}.get(status)
         has_tickets = availability is not None or bool(d.get("buyLink") or d.get("showBuyLink"))
-        events.append(Event(
+        add_event(events,
             source=SOURCE,
             venue=VENUE if room.lower() in FUUGA_ROOMS or not room else room,
             title=_text(d["title"]),
@@ -51,7 +51,7 @@ def parse(data: dict, today: date) -> list[Event]:
             access="tickets" if has_tickets else None,
             availability=availability,
             url=d["url"],
-        ))
+        )
     return events
 
 
