@@ -14,6 +14,7 @@ from site_builder.i18n import (MONTHS_NOMINATIVE, MONTHS_SHORT, STRINGS, WEEKDAY
 
 ROOT = Path(__file__).resolve().parent.parent
 SITE = ROOT / "site"
+SITE_URL = "https://tomas277.github.io/livemusicTurku/"  # change when the custom domain arrives
 # One colour per venue, so a glance at the dots tells you where a gig is.
 VENUE_COLORS = ["#e4452b", "#2f7de1", "#1f9d6c", "#c98a0b", "#8e55d6",
                 "#d4478f", "#0e9aa7", "#7a8b1f", "#b25b2a"]
@@ -61,7 +62,7 @@ def render(events: list[dict], built_on: date, out: Path = SITE) -> None:
         }
         page = env.get_template("index.html").render(
             t=t, lang=lang, months=months, venues=[{"name": v, "color": colors[v]} for v in venues],
-            built_on=built_on.isoformat(), js_strings=js_strings,
+            built_on=built_on.isoformat(), js_strings=js_strings, site_url=SITE_URL,
             dateline=format_day(built_on, lang) + f" {built_on.year}")
         (out / lang).mkdir(parents=True, exist_ok=True)
         (out / lang / "index.html").write_text(page, encoding="utf-8")

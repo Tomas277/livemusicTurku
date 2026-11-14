@@ -138,7 +138,27 @@
 
   /* ---- Add to calendar (.ics) ---- */
   const icsText = (v) => v.replace(/[\\;,]/g, "\\$&").replace(/\n/g, "\\n");
-  const icsFold = (line) => line.match(/.{1,70}/gu).join("\r\n ");
+  // RFC 5545: a line is at most 75 octets (UTF-8 bytes), and a continuation line starts with one space.
+  const utf8 = new TextEncoder();
+  function icsFold(line) {
+    const out = [];
+    let cur = "", bytes = 0;
+    for (const ch of line) {                       // iterates whole characters, never splitting one
+      const n = utf8.encode(ch).length;
+      if (bytes + n > (out.length ? 74 : 75)) { out.push(cur); cur = ""; bytes = 0; }
+      cur += ch; bytes += n;
+    }
+    out.push(cur);
+    return out.join("\r\n ");
+  }
+  // Floating times would shift on a phone in another time zone, so the event carries Helsinki's rules.
+  const ICS_ZONE = ["BEGIN:VTIMEZONE", "TZID:Europe/Helsinki",
+    "BEGIN:DAYLIGHT", "TZOFFSETFROM:+0200", "TZOFFSETTO:+0300", "TZNAME:EEST", "DTSTART:19700329T030000",
+    "RRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=-1SU", "END:DAYLIGHT",
+    "BEGIN:STANDARD", "TZOFFSETFROM:+0300", "TZOFFSETTO:+0200", "TZNAME:EET", "DTSTART:19701025T040000",
+    "RRULE:FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU", "END:STANDARD", "END:VTIMEZONE"];
+  const slug = (v) => v.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 60) || "gig";
   function downloadIcs(c) {
     const d = c.dataset, day = d.date.replace(/-/g, "");
     const time = d.start || d.doors;
@@ -149,19 +169,20 @@
       const end = new Date(2000, 0, 1, h + 2, m);   // gig lengths are not published: assume two hours
       const hhmm = (hh, mm) => `${String(hh).padStart(2, "0")}${String(mm).padStart(2, "0")}00`;
       const endDay = end.getDate() === 1 ? day : iso(addDays(parse(d.date), 1)).replace(/-/g, "");
-      when = [`DTSTART:${day}T${hhmm(h, m)}`, `DTEND:${endDay}T${hhmm(end.getHours(), end.getMinutes())}`];
+      when = [`DTSTART;TZID=Europe/Helsinki:${day}T${hhmm(h, m)}`,
+        `DTEND;TZID=Europe/Helsinki:${endDay}T${hhmm(end.getHours(), end.getMinutes())}`];
     } else {
       when = [`DTSTART;VALUE=DATE:${day}`, `DTEND;VALUE=DATE:${iso(addDays(parse(d.date), 1)).replace(/-/g, "")}`];
     }
-    const lines = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//livemusicTurku//EN", "BEGIN:VEVENT",
+    const lines = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//livemusicTurku//EN", ...ICS_ZONE, "BEGIN:VEVENT",
       `UID:${day}-${encodeURIComponent(d.url)}@livemusicturku`, `DTSTAMP:${stamp}`, ...when,
       `SUMMARY:${icsText(d.title)}`, `LOCATION:${icsText(`${d.venue}, Turku`)}`, `URL:${d.url}`,
       `DESCRIPTION:${icsText(d.doors ? `${T.doors} ${d.doors}\n${d.url}` : d.url)}`, "END:VEVENT", "END:VCALENDAR"];
     const a = el("a");
     a.href = URL.createObjectURL(new Blob([lines.map(icsFold).join("\r\n") + "\r\n"], { type: "text/calendar" }));
-    a.download = "gig.ics";
+    a.download = `${slug(d.title)}.ics`;
     a.click();
-    URL.revokeObjectURL(a.href);
+    setTimeout(() => URL.revokeObjectURL(a.href), 1000);   // revoking at once can cancel the download in Safari
   }
   document.addEventListener("click", (e) => {
     const b = e.target.closest(".ics");

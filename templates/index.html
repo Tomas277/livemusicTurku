@@ -6,6 +6,10 @@
   <title>{{ t.title }}</title>
   <meta name="description" content="{{ t.description }}">
   <meta name="color-scheme" content="light dark">
+  <link rel="canonical" href="{{ site_url }}{{ lang }}/">
+  <link rel="alternate" hreflang="fi" href="{{ site_url }}fi/">
+  <link rel="alternate" hreflang="en" href="{{ site_url }}en/">
+  <link rel="alternate" hreflang="x-default" href="{{ site_url }}">
   <link rel="preload" href="../static/fonts/unifrakturcook-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="../static/fonts/playfair-display-vf-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="../static/style.css">

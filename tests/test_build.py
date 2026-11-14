@@ -75,3 +75,11 @@ def test_main_builds_from_the_history_csv_alone(tmp_path, monkeypatch):
     monkeypatch.setattr(build, "render", lambda events, built_on: built.append(events))
     build.main()  # no warehouse.duckdb anywhere
     assert [e["title"] for e in built[0]] == ["Future gig"]
+
+
+def test_pages_point_search_engines_at_both_languages(tmp_path):
+    from site_builder.build import SITE_URL
+    render(EVENTS, date(2026, 11, 14), tmp_path)
+    fi = (tmp_path / "fi" / "index.html").read_text(encoding="utf-8")
+    assert f'rel="canonical" href="{SITE_URL}fi/"' in fi
+    assert f'hreflang="en" href="{SITE_URL}en/"' in fi and 'hreflang="x-default"' in fi
