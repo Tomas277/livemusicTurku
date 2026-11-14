@@ -41,3 +41,12 @@ def test_many_problems_are_summarised():
     bad = [ev(str(i), url="") for i in range(9)]
     problems = check_events("s", bad, TODAY, 0)
     assert len(problems) == 6 and "4 more" in problems[-1]
+
+
+def test_wrong_types_and_formats_are_flagged():
+    assert "age_limit" in check_events("s", [ev(age_limit="K12")], TODAY, 0)[0]
+    assert "HH:MM" in check_events("s", [ev(start="7pm")], TODAY, 0)[0]
+    assert "access" in check_events("s", [ev(access="paid")], TODAY, 0)[0]
+    assert "availability" in check_events("s", [ev(availability="full")], TODAY, 0)[0]
+    assert check_events("s", [ev(age_limit=18, start="19:30", doors="18:00", access="free",
+                                 availability="few")], TODAY, 0) == []

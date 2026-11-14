@@ -39,18 +39,19 @@ def main() -> None:
             continue
         try:
             events = module.extract(today)
-        except Exception as exc:  # one broken scraper must not stop the others
+            problems = checks.check_events(name, events, today,
+                                           history.previous_upcoming_count(con, name, today))
+            if not problems:
+                load(con, name, events, today)
+        except Exception as exc:  # one broken source must not stop the others
             failed.append(name)
             print(f"{name}: FAILED - {type(exc).__name__}: {exc}", file=sys.stderr)
             continue
-        problems = checks.check_events(name, events, today,
-                                       history.previous_upcoming_count(con, name, today))
         if problems:  # a suspicious scrape is not trusted: the last good one stays on the site
             failed.append(name)
             for problem in problems:
                 print(f"{name}: CHECK FAILED - {problem}", file=sys.stderr)
             continue
-        load(con, name, events, today)
         print(f"{name}: loaded {len(events)} events")
 
     transform(con, today)

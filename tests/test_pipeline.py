@@ -1,3 +1,4 @@
+import pytest
 from datetime import date
 from pathlib import Path
 
@@ -62,3 +63,32 @@ def test_runo_pattern_matches_only_at_word_start():
     transform(con, TODAY)
     kept = {r[0] for r in con.execute("SELECT title FROM int.events").fetchall()}
     assert kept == {"Bruno Mars Tribute"}
+
+
+def test_one_broken_source_does_not_stop_the_others(tmp_path, monkeypatch, capsys):
+    from types import SimpleNamespace
+
+    from pipeline import run
+
+    def good(today):
+        return [{"source": "good", "venue": "G", "title": "Fine gig", "date": "2026-12-01",
+                 "doors": None, "start": "19:00", "age_limit": 18, "url": "u"}]
+
+    def raises(today):
+        raise RuntimeError("site is down")
+
+    def bad_value(today):  # a string where the database expects a number
+        return [dict(good(today)[0], source="bad", age_limit="K12")]
+
+    monkeypatch.setattr(run, "SOURCES", {"good": SimpleNamespace(extract=good),
+                                         "raises": SimpleNamespace(extract=raises),
+                                         "bad": SimpleNamespace(extract=bad_value)})
+    monkeypatch.setattr(run, "WAREHOUSE", tmp_path / "w.duckdb")
+    monkeypatch.setattr(run, "HISTORY_CSV", tmp_path / "history.csv")
+    monkeypatch.setattr(run, "date", SimpleNamespace(today=lambda: TODAY))
+    with pytest.raises(SystemExit) as exit_info:
+        run.main()
+    assert exit_info.value.code == 1
+    err = capsys.readouterr().err
+    assert "raises: FAILED" in err and "bad: CHECK FAILED" in err
+    assert "Fine gig" in (tmp_path / "history.csv").read_text(encoding="utf-8")
