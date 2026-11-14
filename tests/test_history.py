@@ -123,3 +123,13 @@ def test_access_and_availability_reach_the_site_and_update_on_rescrape():
     run_day(con, D1, {"dynamo": [ev("A")]})
     run_day(con, D2, {"dynamo": [replace(ev("A"), availability="sold_out")]})
     assert con.execute("SELECT access, availability FROM marts.upcoming_events").fetchall() == [("tickets", "sold_out")]
+
+
+def test_a_retitled_gig_keeps_its_identity():
+    con = new_con()
+    run_day(con, D1, {"dynamo": [ev("Band X")]})
+    run_day(con, D2, {"dynamo": [ev("BAND  X!"), ev("Ä-Band Ö")]})
+    assert rows(con) == {"BAND  X!": (D1, D2), "Ä-Band Ö": (D2, D2)}
+    run_day(con, D2 + timedelta(days=1), {"dynamo": [ev("ä band ö")]})
+    assert rows(con)["ä band ö"][0] == D2  # umlauts count as letters; the gig is still the same
+    assert site(con) == ["ä band ö"]
