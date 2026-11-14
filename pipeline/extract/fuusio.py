@@ -23,7 +23,7 @@ def _clean_title(title: str) -> str:
     return _STAGE_PREFIX.sub("", _STAGE_SUFFIX.sub("", " ".join(title.split())))
 
 
-def parse(html: str, today: date | None = None) -> list[Event]:
+def parse(html: str) -> list[Event]:
     """Parse a full program page or the HTML fragment the 'Next' button loads."""
     soup = BeautifulSoup(html, "lxml")
     events = []

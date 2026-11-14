@@ -25,6 +25,9 @@ def restore(con: duckdb.DuckDBPyConnection, path: Path) -> None:
     if path.exists():
         # Older history files were written before some columns existed; fill those with NULL.
         present = path.read_text(encoding="utf-8").split("\n", 1)[0].strip().split(",")
+        unknown = [k for k in present if k not in COLUMNS]
+        if unknown:
+            raise ValueError(f"{path} has unknown column(s) {', '.join(unknown)}; expected {', '.join(COLUMNS)}")
         cols = ", ".join(f"'{k}': '{COLUMNS[k]}'" for k in present)
         select = ", ".join(k if k in present else f"NULL::{v} AS {k}" for k, v in COLUMNS.items())
         con.execute("CREATE OR REPLACE TABLE history.events_history AS "

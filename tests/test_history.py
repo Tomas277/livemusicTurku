@@ -133,3 +133,11 @@ def test_a_retitled_gig_keeps_its_identity():
     run_day(con, D2 + timedelta(days=1), {"dynamo": [ev("ä band ö")]})
     assert rows(con)["ä band ö"][0] == D2  # umlauts count as letters; the gig is still the same
     assert site(con) == ["ä band ö"]
+
+
+def test_unknown_csv_column_gives_a_clear_error(tmp_path):
+    import pytest
+    path = tmp_path / "h.csv"
+    path.write_text("title,mood\nA,happy\n", encoding="utf-8")
+    with pytest.raises(ValueError, match="unknown column.*mood"):
+        history.restore(duckdb.connect(), path)

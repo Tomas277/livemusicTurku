@@ -18,6 +18,12 @@ def find_time(prefix: str, text: str) -> str | None:
     return f"{int(m.group(1)):02d}:{m.group(2) or '00'}"
 
 
+def normalize_time(text: str) -> str | None:
+    """'9:30' or '19:00 - 21:00' -> the first clock time as 'HH:MM'; None when there is none."""
+    m = re.match(r"\s*(\d{1,2}):(\d{2})", text)
+    return f"{int(m.group(1)):02d}:{m.group(2)}" if m else None
+
+
 def infer_date(day: int, month: int, today: date, weekday: str | None = None) -> date:
     """Resolve a day+month with no year to a full date.
 

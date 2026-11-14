@@ -61,3 +61,9 @@ def test_ticket_availability_comes_from_the_status_colours():
     assert by_title["Muumit Pyrstötähteä etsimässä"].availability == "few"
     assert by_title["Viktoria Tolstoy & Jacob Karlzon – Who We Are"].availability == "available"
     assert {e.access for e in events()} == {"tickets"}
+
+
+def test_normalize_time():
+    from pipeline.dates import normalize_time
+    assert normalize_time("9:30") == "09:30" and normalize_time("19:00 - 21:00") == "19:00"
+    assert normalize_time("") is None and normalize_time("illalla") is None
