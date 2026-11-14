@@ -5,6 +5,7 @@ from bs4 import BeautifulSoup
 
 from pipeline.access import classify
 from pipeline.dates import find_time, infer_date
+from pipeline.event import Event
 
 SOURCE = "dynamo"
 VENUE = "Dynamo"
@@ -32,19 +33,19 @@ def parse(html: str, today: date) -> list[dict]:
         if access == "free" and "UP:" in text and "DOWN:" in text:
             access = None  # two floors with their own entry terms: "free" may only hold for one of them
         link = re.search(r'navigateToURL\("([^"]+)"', block.get("onclick", ""))
-        events.append({
-            "source": SOURCE,
-            "venue": VENUE,
-            "title": title_tag.get_text(" ", strip=True),
-            "date": infer_date(int(m.group(1)), int(m.group(2)), today,
+        events.append(Event(
+            source=SOURCE,
+            venue=VENUE,
+            title=title_tag.get_text(" ", strip=True),
+            date=infer_date(int(m.group(1)), int(m.group(2)), today,
                                day_name.get_text(strip=True)).isoformat(),
-            "doors": find_time(r"ovet\s*klo", text),
-            "start": find_time(r"live\s*klo", text),
-            "age_limit": int(age.group(1)) if age else None,
-            "access": access,
-            "availability": availability,
-            "url": BASE_URL + link.group(1) if link else PROGRAM_URL,
-        })
+            doors=find_time(r"ovet\s*klo", text),
+            start=find_time(r"live\s*klo", text),
+            age_limit=int(age.group(1)) if age else None,
+            access=access,
+            availability=availability,
+            url=BASE_URL + link.group(1) if link else PROGRAM_URL,
+        ).as_dict())
     return events
 
 

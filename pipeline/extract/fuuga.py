@@ -6,6 +6,7 @@ from datetime import date
 import httpx
 
 from pipeline.dates import infer_date
+from pipeline.event import Event
 
 SOURCE = "fuuga"
 VENUE = "Fuuga"
@@ -44,18 +45,16 @@ def parse(data: dict, today: date) -> list[dict]:
         status = str(d.get("capacityStatus") or "").lower()
         availability = {"red": "sold_out", "yellow": "few", "green": "available"}.get(status)
         has_tickets = availability is not None or bool(d.get("buyLink") or d.get("showBuyLink"))
-        events.append({
-            "source": SOURCE,
-            "venue": VENUE if room.lower() in FUUGA_ROOMS or not room else room,
-            "title": _text(d["title"]),
-            "date": day.isoformat(),
-            "doors": None,
-            "start": f"{int(start.group().split(':')[0]):02d}:{start.group().split(':')[1]}" if start else None,
-            "age_limit": None,
-            "access": "tickets" if has_tickets else None,
-            "availability": availability,
-            "url": d["url"],
-        })
+        events.append(Event(
+            source=SOURCE,
+            venue=VENUE if room.lower() in FUUGA_ROOMS or not room else room,
+            title=_text(d["title"]),
+            date=day.isoformat(),
+            start=f"{int(start.group().split(':')[0]):02d}:{start.group().split(':')[1]}" if start else None,
+            access="tickets" if has_tickets else None,
+            availability=availability,
+            url=d["url"],
+        ).as_dict())
     return events
 
 

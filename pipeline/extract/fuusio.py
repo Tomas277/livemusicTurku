@@ -5,6 +5,7 @@ from datetime import date
 import httpx
 from bs4 import BeautifulSoup
 
+from pipeline.event import Event
 from pipeline.fetch import HEADERS, fetch_raw, save_raw
 
 SOURCE = "fuusio"
@@ -32,16 +33,13 @@ def parse(html: str, today: date | None = None) -> list[dict]:
         when = ev.select_one("time[datetime]")
         if not (link and when):
             continue
-        events.append({
-            "source": SOURCE,
-            "venue": VENUE,
-            "title": _clean_title(link.get_text()),
-            "date": when["datetime"][:10],
-            "doors": None,
-            "start": None,
-            "age_limit": None,
-            "url": link["href"],
-        })
+        events.append(Event(
+            source=SOURCE,
+            venue=VENUE,
+            title=_clean_title(link.get_text()),
+            date=when["datetime"][:10],
+            url=link["href"],
+        ).as_dict())
     return events
 
 
