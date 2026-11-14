@@ -10,19 +10,22 @@ from pipeline.extract import apollo, dynamo, fuuga, fuusio, kuka, logomo
 from pipeline.load import load
 
 WAREHOUSE = Path("data/warehouse.duckdb")
-# The committed history. Set LIVEMUSIC_HISTORY to experiment locally without touching it.
-HISTORY_CSV = Path(os.environ.get("LIVEMUSIC_HISTORY", "data/warehouse/events_history.csv"))
+HISTORY_CSV = history.DEFAULT_PATH
 TRANSFORM_DIR = Path(__file__).parent / "transform"
 SEEDS_DIR = Path(__file__).parent / "seeds"
 SOURCES = {"dynamo": dynamo, "kuka": kuka, "apollo": apollo, "fuusio": fuusio, "fuuga": fuuga, "logomo": logomo}
 
 
+def run_sql(con: duckdb.DuckDBPyConnection, sql_file: Path, today: date) -> None:
+    sql = (sql_file.read_text()
+           .replace("{{today}}", today.isoformat())
+           .replace("{{seeds_dir}}", SEEDS_DIR.resolve().as_posix()))
+    con.execute(sql)
+
+
 def transform(con: duckdb.DuckDBPyConnection, today: date) -> None:
     for sql_file in sorted(TRANSFORM_DIR.glob("*.sql")):
-        sql = (sql_file.read_text()
-               .replace("{{today}}", today.isoformat())
-               .replace("{{seeds_dir}}", SEEDS_DIR.resolve().as_posix()))
-        con.execute(sql)
+        run_sql(con, sql_file, today)
 
 
 def main() -> None:

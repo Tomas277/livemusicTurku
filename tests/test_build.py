@@ -51,3 +51,27 @@ def test_refuses_to_build_an_empty_site(tmp_path):
     import pytest
     with pytest.raises(ValueError):
         render([], date(2026, 11, 14), tmp_path)
+
+
+def test_main_builds_from_the_history_csv_alone(tmp_path, monkeypatch):
+    from datetime import timedelta
+
+    from pipeline import history
+    from pipeline.event import Event
+    from pipeline.load import load
+    from site_builder import build
+    from conftest import empty_con
+
+    today = date.today()
+    con = empty_con()
+    load(con, "dynamo", [Event(source="dynamo", venue="Dynamo", title="Future gig",
+                               date=(today + timedelta(days=5)).isoformat(), url="u")], today)
+    from pipeline.run import transform
+    transform(con, today)
+    history.save(con, tmp_path / "history.csv")
+
+    monkeypatch.setattr(history, "DEFAULT_PATH", tmp_path / "history.csv")
+    built = []
+    monkeypatch.setattr(build, "render", lambda events, built_on: built.append(events))
+    build.main()  # no warehouse.duckdb anywhere
+    assert [e["title"] for e in built[0]] == ["Future gig"]

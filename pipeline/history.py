@@ -2,12 +2,17 @@
 
 Each run restores it into DuckDB, merges today's scrape with SQL, and saves it back.
 """
+import os
 from datetime import date
 from pathlib import Path
 
 import duckdb
 
 from pipeline.event import HISTORY_TYPES as COLUMNS
+
+# Set LIVEMUSIC_HISTORY to work on a scratch copy locally without touching the committed file.
+DEFAULT_PATH = Path(os.environ.get(
+    "LIVEMUSIC_HISTORY", Path(__file__).resolve().parent.parent / "data" / "warehouse" / "events_history.csv"))
 
 
 def _sql_path(path: Path) -> str:

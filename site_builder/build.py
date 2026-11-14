@@ -7,11 +7,12 @@ from pathlib import Path
 import duckdb
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
+from pipeline import history
+from pipeline.run import TRANSFORM_DIR, run_sql
 from site_builder.i18n import (MONTHS_NOMINATIVE, MONTHS_SHORT, STRINGS, WEEKDAYS, WEEKDAYS_SHORT,
                                format_age, format_day, format_month)
 
 ROOT = Path(__file__).resolve().parent.parent
-WAREHOUSE = ROOT / "data" / "warehouse.duckdb"
 SITE = ROOT / "site"
 # One colour per venue, so a glance at the dots tells you where a gig is.
 VENUE_COLORS = ["#e4452b", "#2f7de1", "#1f9d6c", "#c98a0b", "#8e55d6",
@@ -67,9 +68,13 @@ def render(events: list[dict], built_on: date, out: Path = SITE) -> None:
 
 
 def main() -> None:
-    con = duckdb.connect(str(WAREHOUSE), read_only=True)
+    # The site is built from the committed history alone: no scrape or warehouse file needed.
+    today = date.today()
+    con = duckdb.connect()
+    history.restore(con, history.DEFAULT_PATH)
+    run_sql(con, TRANSFORM_DIR / "03_marts_upcoming.sql", today)
     events = read_events(con)
-    render(events, date.today())
+    render(events, today)
     print(f"site/: {len(events)} events, languages: {', '.join(STRINGS)}")
 
 
