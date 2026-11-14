@@ -1,10 +1,10 @@
 import os
 import sys
-from datetime import date
 
 import duckdb
 
 from pipeline import checks, history
+from pipeline.dates import today_in_turku
 from pipeline.extract import apollo, dynamo, fuuga, fuusio, kuka, logomo
 from pipeline.load import load
 from pipeline.sql import transform
@@ -14,7 +14,7 @@ SOURCES = {"dynamo": dynamo, "kuka": kuka, "apollo": apollo, "fuusio": fuusio, "
 
 
 def main() -> None:
-    today = date.today()
+    today = today_in_turku()
     con = duckdb.connect()  # in memory: the committed history CSV is the only state that survives a run
     history.restore(con, HISTORY_CSV)
 

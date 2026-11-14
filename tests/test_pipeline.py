@@ -85,7 +85,7 @@ def test_one_broken_source_does_not_stop_the_others(tmp_path, monkeypatch, capsy
                                          "raises": SimpleNamespace(extract=raises),
                                          "bad": SimpleNamespace(extract=bad_value)})
     monkeypatch.setattr(run, "HISTORY_CSV", tmp_path / "history.csv")
-    monkeypatch.setattr(run, "date", SimpleNamespace(today=lambda: TODAY))
+    monkeypatch.setattr(run, "today_in_turku", lambda: TODAY)
     with pytest.raises(SystemExit) as exit_info:
         run.main()
     assert exit_info.value.code == 1
@@ -107,3 +107,12 @@ def test_a_failed_load_leaves_staging_as_it_was():
     with pytest.raises(Exception):
         load(con, "t", [gig("Replacement"), broken], TODAY)  # same source and day: replaces the rows
     assert sorted(r[0] for r in con.execute("SELECT title FROM staging.events_raw").fetchall()) == ["First", "Second"]
+
+
+def test_today_in_turku_follows_helsinki_not_utc():
+    from datetime import datetime, timezone
+
+    from pipeline.dates import today_in_turku
+    assert today_in_turku(datetime(2026, 11, 14, 22, 30, tzinfo=timezone.utc)) == date(2026, 11, 15)  # winter, +2
+    assert today_in_turku(datetime(2026, 7, 1, 20, 30, tzinfo=timezone.utc)) == date(2026, 7, 1)      # summer, +3
+    assert today_in_turku(datetime(2026, 7, 1, 21, 30, tzinfo=timezone.utc)) == date(2026, 7, 2)

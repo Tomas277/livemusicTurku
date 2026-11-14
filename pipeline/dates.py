@@ -1,5 +1,6 @@
 import re
-from datetime import date
+from datetime import date, datetime
+from zoneinfo import ZoneInfo
 
 FI_WEEKDAYS = {
     "maanantai": 0, "tiistai": 1, "keskiviikko": 2, "torstai": 3,
@@ -7,7 +8,14 @@ FI_WEEKDAYS = {
     "ma": 0, "ti": 1, "ke": 2, "to": 3, "pe": 4, "la": 5, "su": 6,
 }
 
+TURKU = ZoneInfo("Europe/Helsinki")
 _TIME = r"(\d{1,2})(?:[:.](\d{2}))?"
+
+
+def today_in_turku(now: datetime | None = None) -> date:
+    """Today's date in Turku. The CI runner's clock is UTC, which is 2-3 hours behind and would
+    give yesterday's date late in the evening."""
+    return (now or datetime.now(TURKU)).astimezone(TURKU).date()
 
 
 def find_time(prefix: str, text: str) -> str | None:

@@ -8,6 +8,7 @@ import duckdb
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
 from pipeline import history
+from pipeline.dates import today_in_turku
 from pipeline.sql import TRANSFORM_DIR, run_sql
 from site_builder.i18n import (MONTHS_NOMINATIVE, MONTHS_SHORT, STRINGS, WEEKDAYS, WEEKDAYS_SHORT,
                                format_age, format_day, format_month)
@@ -79,7 +80,7 @@ def render(events: list[dict], built_on: date, out: Path = SITE) -> None:
 
 def main() -> None:
     # The site is built from the committed history alone: no scrape or warehouse file needed.
-    today = date.today()
+    today = today_in_turku()
     con = duckdb.connect()
     history.restore(con, history.DEFAULT_PATH)
     run_sql(con, TRANSFORM_DIR / "03_marts_upcoming.sql", today)

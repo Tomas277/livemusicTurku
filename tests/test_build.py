@@ -62,7 +62,8 @@ def test_main_builds_from_the_history_csv_alone(tmp_path, monkeypatch):
     from site_builder import build
     from conftest import empty_con
 
-    today = date.today()
+    from pipeline.dates import today_in_turku
+    today = today_in_turku()
     con = empty_con()
     load(con, "dynamo", [Event(source="dynamo", venue="Dynamo", title="Future gig",
                                date=(today + timedelta(days=5)).isoformat(), url="u")], today)
