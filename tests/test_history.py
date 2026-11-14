@@ -141,3 +141,15 @@ def test_unknown_csv_column_gives_a_clear_error(tmp_path):
     path.write_text("title,mood\nA,happy\n", encoding="utf-8")
     with pytest.raises(ValueError, match="unknown column.*mood"):
         history.restore(duckdb.connect(), path)
+
+
+def test_restore_then_save_leaves_the_file_byte_identical(tmp_path):
+    first = tmp_path / "a.csv"
+    con = new_con()
+    run_day(con, D1, {"dynamo": [ev('Band, "The" Best'), ev("Äiti", "2026-12-02"), ev("B", "2026-12-01")]})
+    history.save(con, first)
+    again = tmp_path / "b.csv"
+    other = duckdb.connect()
+    history.restore(other, first)
+    history.save(other, again)
+    assert again.read_bytes() == first.read_bytes()  # no git diff churn from a run that changes nothing
