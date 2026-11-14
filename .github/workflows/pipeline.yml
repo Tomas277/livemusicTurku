@@ -6,6 +6,11 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+    inputs:
+      accept:
+        description: "Sources whose gig count may drop sharply this run, e.g. kuka,apollo"
+        required: false
+        default: ""
 
 permissions:
   contents: write   # the history file is committed back to the repo
@@ -33,6 +38,8 @@ jobs:
         id: pipeline
         # A broken scraper must not stop the site updating; the "alert" job fails the run afterwards.
         continue-on-error: true
+        env:
+          LIVEMUSIC_ACCEPT: ${{ inputs.accept }}
         run: python -m pipeline.run
       - name: Save event history
         # The history CSV is the project's database. Committing it keeps it between runs for free.

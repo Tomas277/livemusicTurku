@@ -14,8 +14,13 @@ MIN_PREVIOUS = 4       # below this, a drop in the number of gigs is not meaning
 MAX_LISTED = 5
 
 
-def check_events(source: str, events: list[Event], today: date, previous_upcoming: int) -> list[str]:
-    """Return a list of problems; an empty list means the scrape is trustworthy."""
+def check_events(source: str, events: list[Event], today: date, previous_upcoming: int,
+                 accept_drop: bool = False) -> list[str]:
+    """Return a list of problems; an empty list means the scrape is trustworthy.
+
+    accept_drop skips only the comparison with the previous gig count, for a venue that
+    really did shrink its program. Every other check still runs.
+    """
     problems = []
 
     for e in events:
@@ -29,6 +34,8 @@ def check_events(source: str, events: list[Event], today: date, previous_upcomin
     if len(problems) > MAX_LISTED:
         problems = problems[:MAX_LISTED] + [f"{source}: ... and {len(problems) - MAX_LISTED} more"]
 
+    if accept_drop:
+        return problems
     upcoming = sum(1 for e in events if e.date >= today.isoformat())
     if previous_upcoming >= MIN_PREVIOUS and upcoming < previous_upcoming / 2:
         problems.append(f"{source}: only {upcoming} upcoming gigs, previously {previous_upcoming} "

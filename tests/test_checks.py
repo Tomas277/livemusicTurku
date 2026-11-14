@@ -41,3 +41,10 @@ def test_many_problems_are_summarised():
     bad = [ev(str(i), url="") for i in range(9)]
     problems = check_events("s", bad, TODAY, 0)
     assert len(problems) == 6 and "4 more" in problems[-1]
+
+
+def test_accept_drop_skips_only_the_count_comparison():
+    few = [ev(str(i)) for i in range(3)]
+    assert check_events("s", few, TODAY, previous_upcoming=20, accept_drop=True) == []
+    assert check_events("s", [], TODAY, previous_upcoming=20, accept_drop=True) == []
+    assert "missing title" in check_events("s", [ev(title="")], TODAY, 20, accept_drop=True)[0]

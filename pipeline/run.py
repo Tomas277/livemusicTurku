@@ -34,13 +34,16 @@ def main() -> None:
     failed = []
     # Set LIVEMUSIC_SOURCES=fuuga,kuka to scrape only some sources locally (the rest keep their history).
     only = {n for n in os.environ.get("LIVEMUSIC_SOURCES", "").split(",") if n}
+    # LIVEMUSIC_ACCEPT=kuka lets a venue that really shrank its program through the gig-count check once.
+    accept = {n for n in os.environ.get("LIVEMUSIC_ACCEPT", "").replace(" ", "").split(",") if n}
     for name, module in SOURCES.items():
         if only and name not in only:
             continue
         try:
             events = module.extract(today)
             problems = checks.check_events(name, events, today,
-                                           history.previous_upcoming_count(con, name, today))
+                                           history.previous_upcoming_count(con, name, today),
+                                           accept_drop=name in accept)
             if not problems:
                 load(con, name, events, today)
         except Exception as exc:  # one broken source must not stop the others
