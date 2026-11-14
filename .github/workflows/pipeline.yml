@@ -32,16 +32,20 @@ jobs:
         with:
           python-version: "3.13"
           cache: pip
-      - run: pip install -r requirements.txt
+      - run: pip install -r requirements-dev.txt
       - run: python -m pytest -q
       - name: Extract, load and transform
         id: pipeline
+        # A push only tests and rebuilds the site from the committed history; scraping runs on the schedule
+        # and on manual runs.
+        if: github.event_name != 'push'
         # A broken scraper must not stop the site updating; the "alert" job fails the run afterwards.
         continue-on-error: true
         env:
           LIVEMUSIC_ACCEPT: ${{ inputs.accept }}
         run: python -m pipeline.run
       - name: Save event history
+        if: github.event_name != 'push'
         # The history CSV is the project's database. Committing it keeps it between runs for free.
         # Pushes made with GITHUB_TOKEN do not start another workflow run.
         run: |
@@ -58,6 +62,7 @@ jobs:
       - name: Build site
         run: python -m site_builder.build
       - name: Keep raw pages (90 days)
+        if: github.event_name != 'push'
         uses: actions/upload-artifact@v4
         with:
           name: raw-pages
