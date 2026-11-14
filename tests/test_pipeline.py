@@ -84,7 +84,6 @@ def test_one_broken_source_does_not_stop_the_others(tmp_path, monkeypatch, capsy
     monkeypatch.setattr(run, "SOURCES", {"good": SimpleNamespace(extract=good),
                                          "raises": SimpleNamespace(extract=raises),
                                          "bad": SimpleNamespace(extract=bad_value)})
-    monkeypatch.setattr(run, "WAREHOUSE", tmp_path / "w.duckdb")
     monkeypatch.setattr(run, "HISTORY_CSV", tmp_path / "history.csv")
     monkeypatch.setattr(run, "date", SimpleNamespace(today=lambda: TODAY))
     with pytest.raises(SystemExit) as exit_info:

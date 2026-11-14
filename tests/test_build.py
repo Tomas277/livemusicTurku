@@ -73,7 +73,7 @@ def test_main_builds_from_the_history_csv_alone(tmp_path, monkeypatch):
     monkeypatch.setattr(history, "DEFAULT_PATH", tmp_path / "history.csv")
     built = []
     monkeypatch.setattr(build, "render", lambda events, built_on: built.append(events))
-    build.main()  # no warehouse.duckdb anywhere
+    build.main()  # needs nothing but the history CSV
     assert [e["title"] for e in built[0]] == ["Future gig"]
 
 

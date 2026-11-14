@@ -9,7 +9,6 @@ from pipeline import checks, history
 from pipeline.extract import apollo, dynamo, fuuga, fuusio, kuka, logomo
 from pipeline.load import load
 
-WAREHOUSE = Path("data/warehouse.duckdb")
 HISTORY_CSV = history.DEFAULT_PATH
 TRANSFORM_DIR = Path(__file__).parent / "transform"
 SEEDS_DIR = Path(__file__).parent / "seeds"
@@ -30,8 +29,7 @@ def transform(con: duckdb.DuckDBPyConnection, today: date) -> None:
 
 def main() -> None:
     today = date.today()
-    WAREHOUSE.parent.mkdir(exist_ok=True)
-    con = duckdb.connect(str(WAREHOUSE))
+    con = duckdb.connect()  # in memory: the committed history CSV is the only state that survives a run
     history.restore(con, HISTORY_CSV)
 
     failed = []

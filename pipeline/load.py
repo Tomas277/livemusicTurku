@@ -15,8 +15,6 @@ def load(con: duckdb.DuckDBPyConnection, source: str, events: list[Event], today
     con.execute("CREATE SCHEMA IF NOT EXISTS staging")
     columns = {**SQL_TYPES, "scraped_on": "DATE"}
     con.execute(f"CREATE TABLE IF NOT EXISTS staging.events_raw ({', '.join(f'{k} {v}' for k, v in columns.items())})")
-    for name, sql_type in columns.items():  # a table made by an older version of the pipeline may lack newer columns
-        con.execute(f"ALTER TABLE staging.events_raw ADD COLUMN IF NOT EXISTS {name} {sql_type}")
     cols = ", ".join([*COLUMNS, "scraped_on"])
     con.begin()  # delete and insert succeed or fail together, so a half-written scrape never counts as today's
     try:
